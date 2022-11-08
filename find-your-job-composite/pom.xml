@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fyj</groupId>
-	<artifactId>find-your-job</artifactId>
+	<artifactId>find-your-job-composite</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>find-your-job-composite</name>
 	<description>backend for find your job</description>
