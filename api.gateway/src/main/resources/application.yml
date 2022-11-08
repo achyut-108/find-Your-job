@@ -1,0 +1,27 @@
+server:
+  port: 8762
+spring:
+  application:
+    name: fyj-api-gateway
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost
+    #preferIpAddress: true
+zuul:
+  host:
+    connect-timeout-millis: 500000
+    socket-timeout-millis:  500000
+  ignoredServices: '*'
+  routes:
+    get-set-go-composite:
+      path: /gsg/gsg-composite/**
+      serviceId: GET-SET-GO-COMPOSITE
+      stripPrefix: false
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
