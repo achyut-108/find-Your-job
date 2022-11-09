@@ -44,7 +44,7 @@ public class LoginServiceImpl implements LoginService {
 					new ValidationError("", "Invalid Credentials", "loginId", loginRequest.getLoginId()));
 		}
 
-		if (loginResponse.getValidationErrors().isEmpty()) {
+		if (Objects.isNull(loginResponse.getValidationErrors()) || loginResponse.getValidationErrors().isEmpty()) {
 			loginResponse.setSuccess(true);
 			loginResponse.setMessage("successfully logged in");
 			return loginResponse;
