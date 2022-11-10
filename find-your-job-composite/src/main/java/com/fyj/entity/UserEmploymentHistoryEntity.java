@@ -18,7 +18,7 @@ import lombok.Data;
 public class UserEmploymentHistoryEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_employment_id")
 	private Integer userEmploymentId;
 	@Column(name = "user_id")

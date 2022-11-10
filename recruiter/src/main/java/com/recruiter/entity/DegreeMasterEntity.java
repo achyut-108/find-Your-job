@@ -15,7 +15,7 @@ import lombok.Data;
 public class DegreeMasterEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "degree_id")
 	private Integer degreeId;
 	@Column(name = "degree")

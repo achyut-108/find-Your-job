@@ -18,7 +18,7 @@ import lombok.Data;
 public class UserEducationHistoryEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_education_id")
 	private Integer userEducationId;
 	@Column(name = "user_id")

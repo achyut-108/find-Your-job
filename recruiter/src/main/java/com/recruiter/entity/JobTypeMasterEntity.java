@@ -15,7 +15,7 @@ import lombok.Data;
 public class JobTypeMasterEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "job_type_id")
 	private Integer jobTypeId;
 	@Column(name = "job_type")

@@ -18,7 +18,7 @@ import lombok.Data;
 public class CompanyJobsDetailsEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "job_details_id")
 	private BigInteger jobDetailsId;
 	@Column(name = "job_id")

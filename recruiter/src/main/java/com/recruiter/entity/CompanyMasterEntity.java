@@ -17,7 +17,7 @@ import lombok.Data;
 public class CompanyMasterEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "company_id")
 	private Integer companyId;
 	@Column(name = "company_name")
