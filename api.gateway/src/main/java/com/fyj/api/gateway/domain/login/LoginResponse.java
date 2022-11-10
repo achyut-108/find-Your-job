@@ -14,4 +14,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class LoginResponse extends CommonServiceResponse implements Serializable {
 	public static final long serialVersionUID = 1L;
+	private String loginId;
+	private String userType;
 }

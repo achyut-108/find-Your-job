@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fyj.api.gateway.common.BusinessConstants;
+import com.fyj.api.gateway.common.CommonServiceResponse;
+import com.fyj.api.gateway.common.ErrorCodes;
 import com.fyj.api.gateway.common.UserTypeValidator;
 import com.fyj.api.gateway.common.ValidationError;
 import com.fyj.api.gateway.domain.signup.NewUserSignUpRequest;
@@ -68,7 +70,7 @@ public class SignUpServiceImpl implements SignUpService {
 
 		}
 
-		if (Objects.isNull(newJoineeSignUpResponse.getValidationErrors) || 
+		if (Objects.isNull(newJoineeSignUpResponse.getValidationErrors()) || 
 				newJoineeSignUpResponse.getValidationErrors().isEmpty()) {
 			userEntity = userRepository.save(userEntity);
 
@@ -123,4 +125,36 @@ public class SignUpServiceImpl implements SignUpService {
 
 		return newUserSignUpResponse;
 	}
-}
+	
+	@Override
+	public CommonServiceResponse validateUserId(String userId) {
+		UserEntity user = userRepository.findByLoginIdAndActive(userId, BusinessConstants.ACTIVE);
+		
+		CommonServiceResponse response = new CommonServiceResponse();
+		
+		if(Objects.nonNull(user)) {
+			response.addValidationError(ErrorCodes.USER_ID_ALREADY_EXIST.getCode(), ErrorCodes.USER_ID_ALREADY_EXIST.getDescription(), "userId", userId);
+			return response;
+		}
+		response.setSuccess(true);
+		return response;
+		
+	}
+	
+	@Override
+	public CommonServiceResponse validateEmailId(String userId, String emailId) {
+		UserEntity user = userRepository.findByLoginIdAndActive(userId, BusinessConstants.ACTIVE);
+		
+		CommonServiceResponse response = new CommonServiceResponse();
+		
+		if(Objects.nonNull(user) && user.getEmail().equalsIgnoreCase(emailId)) {
+			response.addValidationError(ErrorCodes.EMAIL_ID_ALREADY_EXIST.getCode(), ErrorCodes.EMAIL_ID_ALREADY_EXIST.getDescription(), "emailId", emailId);
+			return response;
+		}
+	
+		response.setSuccess(true);
+		return response;
+		
+	}
+	
+}	

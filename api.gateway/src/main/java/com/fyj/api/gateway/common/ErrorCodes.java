@@ -12,7 +12,9 @@ public enum ErrorCodes {
   INVALID_PASSWORD("IHS_ERROR_601", "Your Password is not Valid"),
   INVALID_DATA("IHS_ERROR_602", "Invalid data type"),
   AUTHENTICATION_FAILED("IHS_ERROR_603","Not Authenticated"),
-  INVALID_JOB_ID("IHS_ERROR_604", "Invalid job Id");
+  INVALID_JOB_ID("IHS_ERROR_604", "Invalid job Id"),
+  USER_ID_ALREADY_EXIST("FYJ_ERROR_605", "User id already in use"),
+  EMAIL_ID_ALREADY_EXIST("FYJ_ERROR_606", "Email id already in use");
 
   private final String code;
   private final String description;

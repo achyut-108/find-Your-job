@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fyj.api.gateway.common.BusinessConstants;
+import com.fyj.api.gateway.common.UserTypeValidator;
 import com.fyj.api.gateway.common.ValidationError;
 import com.fyj.api.gateway.domain.login.LoginRequest;
 import com.fyj.api.gateway.domain.login.LoginResponse;
@@ -47,6 +48,8 @@ public class LoginServiceImpl implements LoginService {
 		if (Objects.isNull(loginResponse.getValidationErrors()) || loginResponse.getValidationErrors().isEmpty()) {
 			loginResponse.setSuccess(true);
 			loginResponse.setMessage("successfully logged in");
+			loginResponse.setLoginId(loginRequest.getLoginId());
+			loginResponse.setUserType(UserTypeValidator.INSTANCE.getUserType(user.getUserTypeId()));
 			return loginResponse;
 		}
 

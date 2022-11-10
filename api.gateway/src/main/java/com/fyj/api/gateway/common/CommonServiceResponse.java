@@ -9,7 +9,4 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class CommonServiceResponse extends ServiceStatus implements Serializable{
 	public static final long serialVersionUID = 1L;
-	
-	
-	
 }

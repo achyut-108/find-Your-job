@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fyj.api.gateway.common.CommonServiceResponse;
 import com.fyj.api.gateway.domain.signup.NewUserSignUpRequest;
 import com.fyj.api.gateway.domain.signup.NewUserSignUpResponse;
 import com.fyj.api.gateway.domain.signup.UserBasicProfileDetails;
@@ -43,5 +45,17 @@ public class SignUpController {
 	public NewUserSignUpResponse editProfile(@Valid @RequestBody NewUserSignUpRequest newUserSignUpRequest) {
 		log.info("request : {}", newUserSignUpRequest.toString());
 		return signUpService.editProfile(newUserSignUpRequest);
-	}	
+	}
+	
+	@GetMapping(value = "/profile/validate/userid/{userId}", produces = "application/json")
+	public CommonServiceResponse validateUserId(@PathVariable("userId") String userId) {
+		log.info("request : {}", userId);
+		return signUpService.validateUserId(userId);
+	}
+	
+	@GetMapping(value = "/profile/validate/email/{userId}/{emailId}", produces = "application/json")
+	public CommonServiceResponse validateEmailId(@PathVariable("userId") String userId, @PathVariable("emailId") String emailId) {
+		log.info("request : {}", emailId);
+		return signUpService.validateEmailId(userId,emailId);
+	}
 }
