@@ -17,4 +17,12 @@ public class JobSearchResponse extends CommonServiceResponse implements Serializ
 	public static final long serialVersionUID = 1L;
 
 	private List<CompanyJobsAndDetailsEntity> companyjobsAndDetailsList;
+
+	public List<CompanyJobsAndDetailsEntity> getCompanyjobsAndDetailsList() {
+		return companyjobsAndDetailsList;
+	}
+
+	public void setCompanyjobsAndDetailsList(List<CompanyJobsAndDetailsEntity> companyjobsAndDetailsList) {
+		this.companyjobsAndDetailsList = companyjobsAndDetailsList;
+	}
 }

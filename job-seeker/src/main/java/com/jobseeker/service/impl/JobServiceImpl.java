@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import com.jobseeker.common.BusinessConstants;
 import com.jobseeker.common.ErrorCodes;
 import com.jobseeker.common.ValidationError;
-import com.jobseeker.domain.job.JobDetailsRequest;
-import com.jobseeker.domain.job.JobDetailsResponse;
-import com.jobseeker.domain.job.JobSearchResponse;
+import com.jobseeker.domain.jobapply.JobApplyRequest;
+import com.jobseeker.domain.jobapply.JobDetailsResponse;
+import com.jobseeker.domain.jobapply.JobSearchResponse;
 import com.jobseeker.entity.CompanyJobsAndDetailsEntity;
 import com.jobseeker.entity.CompanyJobsDetailsEntity;
 import com.jobseeker.entity.CompanyJobsEntity;
@@ -41,7 +41,7 @@ public class JobServiceImpl implements JobService {
 	private CompanyJobsAndDetailsRepository companyJobsAndDetailsRepository;
 
 	@Override
-	public JobDetailsResponse addJobDetails(JobDetailsRequest jobDetailsRequest) {
+	public JobDetailsResponse addJobDetails(JobApplyRequest jobDetailsRequest) {
 		JobDetailsResponse jobDetailsResponse = new JobDetailsResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobDetailsRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
@@ -95,7 +95,7 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDetailsResponse editJobDetails(JobDetailsRequest jobDetailsRequest) {
+	public JobDetailsResponse editJobDetails(JobApplyRequest jobDetailsRequest) {
 
 		JobDetailsResponse jobDetailsResponse = new JobDetailsResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobDetailsRequest.getLoginId(),
@@ -162,7 +162,7 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDetailsResponse deleteJobDetails(JobDetailsRequest jobDetailsRequest) {
+	public JobDetailsResponse deleteJobDetails(JobApplyRequest jobDetailsRequest) {
 
 		JobDetailsResponse jobDetailsResponse = new JobDetailsResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobDetailsRequest.getLoginId(),

@@ -53,9 +53,9 @@ public class SignUpController {
 		return signUpService.validateUserId(userId);
 	}
 	
-	@GetMapping(value = "/profile/validate/email/{userId}/{emailId}", produces = "application/json")
-	public CommonServiceResponse validateEmailId(@PathVariable("userId") String userId, @PathVariable("emailId") String emailId) {
-		log.info("request : {}", emailId);
-		return signUpService.validateEmailId(userId,emailId);
+	@GetMapping(value = "/profile/validate/email/{email}", produces = "application/json")
+	public CommonServiceResponse validateEmailId(@PathVariable("email") String email) {
+		log.info("request : {}", email);
+		return signUpService.validateEmailId(email);
 	}
 }

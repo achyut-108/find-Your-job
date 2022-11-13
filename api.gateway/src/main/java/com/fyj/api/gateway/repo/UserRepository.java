@@ -12,5 +12,6 @@ public interface UserRepository extends CrudRepository<UserEntity, BigInteger>{
 	
 	public UserEntity findByLoginIdAndPasswordAndActive(String loginId,String password,String active);
 	public UserEntity findByLoginIdAndActive(String loginId,String active);
+	public UserEntity findByEmail(String email);
 	
 }

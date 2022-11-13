@@ -1,4 +1,4 @@
-package com.jobseeker.domain.job;
+package com.jobseeker.domain.jobapply;
 
 import java.io.Serializable;
 import java.util.List;

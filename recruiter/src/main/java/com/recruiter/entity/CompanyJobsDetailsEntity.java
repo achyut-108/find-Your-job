@@ -37,4 +37,65 @@ public class CompanyJobsDetailsEntity {
 	private Date endDate;
 	@Column(name = "ctc_offered")
 	private Integer ctcOffered;
+	public BigInteger getJobDetailsId() {
+		return jobDetailsId;
+	}
+	public void setJobDetailsId(BigInteger jobDetailsId) {
+		this.jobDetailsId = jobDetailsId;
+	}
+	public BigInteger getJobId() {
+		return jobId;
+	}
+	public void setJobId(BigInteger jobId) {
+		this.jobId = jobId;
+	}
+	public Integer getSalaryPerHour() {
+		return salaryPerHour;
+	}
+	public void setSalaryPerHour(Integer salaryPerHour) {
+		this.salaryPerHour = salaryPerHour;
+	}
+	public String getSkillsRequired() {
+		return skillsRequired;
+	}
+	public void setSkillsRequired(String skillsRequired) {
+		this.skillsRequired = skillsRequired;
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
+	}
+	public String getJobLocation() {
+		return jobLocation;
+	}
+	public void setJobLocation(String jobLocation) {
+		this.jobLocation = jobLocation;
+	}
+	public Date getJobCreationDate() {
+		return jobCreationDate;
+	}
+	public void setJobCreationDate(Date jobCreationDate) {
+		this.jobCreationDate = jobCreationDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public Integer getCtcOffered() {
+		return ctcOffered;
+	}
+	public void setCtcOffered(Integer ctcOffered) {
+		this.ctcOffered = ctcOffered;
+	}
+	@Override
+	public String toString() {
+		return "CompanyJobsDetailsEntity [jobDetailsId=" + jobDetailsId + ", jobId=" + jobId + ", salaryPerHour="
+				+ salaryPerHour + ", skillsRequired=" + skillsRequired + ", active=" + active + ", jobLocation="
+				+ jobLocation + ", jobCreationDate=" + jobCreationDate + ", endDate=" + endDate + ", ctcOffered="
+				+ ctcOffered + "]";
+	}
 }

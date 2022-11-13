@@ -1,19 +1,28 @@
 package com.recruiter.service.impl;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.recruiter.common.BusinessConstants;
 import com.recruiter.common.ErrorCodes;
+import com.recruiter.common.UserTypeValidator;
 import com.recruiter.common.ValidationError;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
+import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
+import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.entity.CompanyJobsAndDetailsEntity;
 import com.recruiter.entity.CompanyJobsDetailsEntity;
 import com.recruiter.entity.CompanyJobsEntity;
@@ -39,6 +48,8 @@ public class JobServiceImpl implements JobService {
 	private CompanyMasterRepository companyMasterRepository;
 	@Autowired
 	private CompanyJobsAndDetailsRepository companyJobsAndDetailsRepository;
+
+	private static final Logger log = LoggerFactory.getLogger(JobServiceImpl.class);
 
 	@Override
 	public JobDetailsResponse addJobDetails(JobDetailsRequest jobDetailsRequest) {
@@ -195,9 +206,111 @@ public class JobServiceImpl implements JobService {
 		List<CompanyJobsAndDetailsEntity> companyJobAndDetails = (List<CompanyJobsAndDetailsEntity>) companyJobsAndDetailsRepository
 				.findAll();
 
+		for (CompanyJobsAndDetailsEntity companyJobsAndDetailsEntity : companyJobAndDetails) {
+			log.info("get all jobs response : " + companyJobsAndDetailsEntity.getJobId());
+		}
+
+		List<Integer> companyIds = companyJobAndDetails.stream().map(e -> {
+			return e.getCompanyId();
+		}).distinct().toList();
+
+		List<CompanyMasterEntity> companies = (List<CompanyMasterEntity>) companyMasterRepository
+				.findAllById(companyIds);
+
+		Map<Integer, CompanyMasterEntity> companyMap = new HashMap<>();
+
+		companies.forEach(company -> {
+			companyMap.put(company.getCompanyId(), company);
+		});
+
+		companyJobAndDetails.forEach(e -> {
+			CompanyMasterEntity company = companyMap.get(e.getCompanyId());
+			e.setCompanyName(company.getCompanyName());
+			e.setCompanyDescription(company.getCompanyDescription());
+		});
+
 		JobSearchResponse jobSearchResponse = new JobSearchResponse();
 		jobSearchResponse.setMessage("Successfully fetched the posted jobs");
 		jobSearchResponse.setSuccess(true);
+		jobSearchResponse.setCompanyjobsAndDetailsList(companyJobAndDetails);
+
 		return jobSearchResponse;
 	}
+
+	@Override
+	public RecruiterDetailsResponse getRecruiterDetails(Integer companyId) {
+		Optional<CompanyMasterEntity> companyMasterOpt = companyMasterRepository.findById(companyId);
+
+		RecruiterDetailsResponse response = new RecruiterDetailsResponse();
+		if (companyMasterOpt.isPresent()) {
+			CompanyMasterEntity companyMaster = companyMasterOpt.get();
+			Optional<UserEntity> userOpt = userRepository.findById(companyMaster.getUserId());
+			if (!userOpt.isPresent()) {
+				response.addValidationError(new ValidationError(ErrorCodes.RECRUITER_DOES_NOT_EXIST.getCode(),
+						ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "companyId", companyId));
+				return response;
+			}
+			UserEntity userEntity = userOpt.get();
+			response.setActive(userEntity.getActive());
+			response.setEmail(userEntity.getEmail());
+			response.setFirstName(userEntity.getFirstName());
+			response.setLastName(userEntity.getLastName());
+			response.setMobileNumber(userEntity.getMobileNumber());
+			return response;
+		}
+		response.addValidationError(
+				new ValidationError("FYJ_ERROR_607", "Recruiter does not exist", "companyId", companyId));
+		return response;
+	}
+
+	@Override
+	public RecruiterJobDetailsResponse getAllJobsPostedByARecruiter(String loginId) {
+
+		RecruiterJobDetailsResponse response = new RecruiterJobDetailsResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(loginId, BusinessConstants.ACTIVE);
+		if (Objects.isNull(userEntity)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", loginId));
+			return response;
+		}
+
+		response.setActive(userEntity.getActive());
+		response.setEmail(userEntity.getEmail());
+		response.setFirstName(userEntity.getFirstName());
+		response.setLastName(userEntity.getLastName());
+		response.setMobileNumber(userEntity.getMobileNumber());
+		response.setUserType(UserTypeValidator.INSTANCE.getUserType(userEntity.getUserTypeId()));
+
+		List<Object[]> jobsPostedByARecruiter = companyJobsRepository.jobsPostedByARecruiter(userEntity.getUserId());
+		List<CompanyJobsAndDetailsEntity> companyJobsAndDetailsEntities = new ArrayList();
+		for (Object[] obj : jobsPostedByARecruiter) {
+			CompanyJobsAndDetailsEntity companyJobsAndDetailsEntity = new CompanyJobsAndDetailsEntity();
+			CompanyJobsDetailsEntity jobDetails = new CompanyJobsDetailsEntity();
+			companyJobsAndDetailsEntity
+					.setJobId(obj[0] == null ? null : BigInteger.valueOf((Long.valueOf(obj[0].toString()))));
+			companyJobsAndDetailsEntity.setCompanyId(obj[1] == null ? null : (Integer) obj[1]);
+			companyJobsAndDetailsEntity.setJobTitle(obj[2] == null ? null : (String) obj[2]);
+			companyJobsAndDetailsEntity.setJobDescription(obj[3] == null ? null : (String) obj[3]);
+			companyJobsAndDetailsEntity.setJobTypeId(obj[4] == null ? null : (Integer) obj[4]);
+			companyJobsAndDetailsEntity
+					.setJobType(BusinessConstants.getJobTypeMap().get(companyJobsAndDetailsEntity.getJobTypeId()));
+			jobDetails.setJobDetailsId(obj[5] == null ? null : BigInteger.valueOf((Long.valueOf(obj[5].toString()))));
+			jobDetails.setSalaryPerHour(obj[6] == null ? null : (Integer) obj[6]);
+			jobDetails.setSkillsRequired(obj[7] == null ? null : (String) obj[7]);
+			jobDetails.setJobLocation(obj[8] == null ? null : (String) obj[8]);
+			jobDetails.setJobCreationDate(obj[9] == null ? null : (Date) obj[9]);
+			jobDetails.setEndDate(obj[10] == null ? null : (Date) obj[10]);
+			jobDetails.setCtcOffered(obj[11] == null ? null : (Integer) obj[11]);
+			companyJobsAndDetailsEntity.setCompanyName(obj[12] == null ? null : (String) obj[12]);
+			companyJobsAndDetailsEntity.setCompanyDescription(obj[13] == null ? null : (String) obj[13]);
+			companyJobsAndDetailsEntity.setCompanyJobDetailsEntity(jobDetails);
+			companyJobsAndDetailsEntities.add(companyJobsAndDetailsEntity);
+
+		}
+
+		response.setCompanyjobsAndDetailsList(companyJobsAndDetailsEntities);
+
+		return response;
+	}
+
 }

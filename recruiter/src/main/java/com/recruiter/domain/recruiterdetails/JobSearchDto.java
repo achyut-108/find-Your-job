@@ -1,8 +1,8 @@
-package com.jobseeker.domain.job;
+package com.recruiter.domain.recruiterdetails;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.jobseeker.entity.CompanyJobsDetailsEntity;
-import com.jobseeker.entity.CompanyJobsEntity;
+import com.recruiter.entity.CompanyJobsDetailsEntity;
+import com.recruiter.entity.CompanyJobsEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

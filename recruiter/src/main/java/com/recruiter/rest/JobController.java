@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
+import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
+import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.service.JobService;
 
 @RestController
@@ -48,5 +51,15 @@ public class JobController {
 	@GetMapping(value = "/resume/allJobs/get", produces = "application/json")
 	public JobSearchResponse getAllJobs() {
 		return jobService.getAllJobs();
+	}
+	
+	@GetMapping(value = "/resume/recruiterDetails/get/{companyId}", produces = "application/json")
+	public RecruiterDetailsResponse getRecruiterDetails(@PathVariable("companyId") Integer companyId) {
+		return jobService.getRecruiterDetails(companyId);
+	}
+	
+	@GetMapping(value = "/resume/recruiterJobDetails/get/{loginId}", produces = "application/json")
+	public RecruiterJobDetailsResponse getAllJobsPostedByARecruiter(@PathVariable("loginId") String loginId) {
+		return jobService.getAllJobsPostedByARecruiter(loginId);
 	}
 }

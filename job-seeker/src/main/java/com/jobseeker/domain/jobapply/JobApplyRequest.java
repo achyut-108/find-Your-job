@@ -1,4 +1,4 @@
-package com.jobseeker.domain.job;
+package com.jobseeker.domain.jobapply;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobDetailsRequest extends CommonServiceRequest implements Serializable{
+public class JobApplyRequest extends CommonServiceRequest implements Serializable{
 	public static final long serialVersionUID = 1L;
 	
 	@NotNull

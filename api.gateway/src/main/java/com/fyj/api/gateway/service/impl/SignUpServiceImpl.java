@@ -142,13 +142,14 @@ public class SignUpServiceImpl implements SignUpService {
 	}
 	
 	@Override
-	public CommonServiceResponse validateEmailId(String userId, String emailId) {
-		UserEntity user = userRepository.findByLoginIdAndActive(userId, BusinessConstants.ACTIVE);
+	public CommonServiceResponse validateEmailId(String email) {
+		UserEntity user = userRepository.findByEmail(email);
 		
 		CommonServiceResponse response = new CommonServiceResponse();
 		
-		if(Objects.nonNull(user) && user.getEmail().equalsIgnoreCase(emailId)) {
-			response.addValidationError(ErrorCodes.EMAIL_ID_ALREADY_EXIST.getCode(), ErrorCodes.EMAIL_ID_ALREADY_EXIST.getDescription(), "emailId", emailId);
+		if(Objects.nonNull(user) && user.getEmail().equalsIgnoreCase(email)) {
+			response.addValidationError(ErrorCodes.EMAIL_ID_ALREADY_EXIST.getCode(), 
+					ErrorCodes.EMAIL_ID_ALREADY_EXIST.getDescription(), "emailId", email);
 			return response;
 		}
 	

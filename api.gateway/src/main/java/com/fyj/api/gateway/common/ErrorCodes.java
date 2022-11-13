@@ -1,6 +1,5 @@
 package com.fyj.api.gateway.common;
 
-
 /***
  * 
  * @author siddhartha.kumar
@@ -14,7 +13,8 @@ public enum ErrorCodes {
   AUTHENTICATION_FAILED("IHS_ERROR_603","Not Authenticated"),
   INVALID_JOB_ID("IHS_ERROR_604", "Invalid job Id"),
   USER_ID_ALREADY_EXIST("FYJ_ERROR_605", "User id already in use"),
-  EMAIL_ID_ALREADY_EXIST("FYJ_ERROR_606", "Email id already in use");
+  EMAIL_ID_ALREADY_EXIST("FYJ_ERROR_606", "Email id already in use"),
+  RECRUITER_DOES_NOT_EXIST("FYJ_ERROR_607","Recruiter does not exist");
 
   private final String code;
   private final String description;

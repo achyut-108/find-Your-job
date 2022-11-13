@@ -1,11 +1,11 @@
-package com.jobseeker.domain.job;
+package com.recruiter.domain.recruiterdetails;
 
 import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.jobseeker.common.CommonServiceResponse;
-import com.jobseeker.entity.CompanyJobsAndDetailsEntity;
+import com.recruiter.common.CommonServiceResponse;
+import com.recruiter.entity.CompanyJobsAndDetailsEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

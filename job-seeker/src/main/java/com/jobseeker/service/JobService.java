@@ -1,15 +1,15 @@
 package com.jobseeker.service;
 
-import com.jobseeker.domain.job.JobDetailsRequest;
-import com.jobseeker.domain.job.JobDetailsResponse;
-import com.jobseeker.domain.job.JobSearchResponse;
+import com.jobseeker.domain.jobapply.JobApplyRequest;
+import com.jobseeker.domain.jobapply.JobDetailsResponse;
+import com.jobseeker.domain.jobapply.JobSearchResponse;
 
 public interface JobService {
-	public JobDetailsResponse addJobDetails(JobDetailsRequest jobDetailsRequest);
+	public JobDetailsResponse addJobDetails(JobApplyRequest jobDetailsRequest);
 
-	public JobDetailsResponse editJobDetails(JobDetailsRequest jobDetailsRequest);
+	public JobDetailsResponse editJobDetails(JobApplyRequest jobDetailsRequest);
 
-	public JobDetailsResponse deleteJobDetails(JobDetailsRequest jobDetailsRequest);
+	public JobDetailsResponse deleteJobDetails(JobApplyRequest jobDetailsRequest);
 
 	public JobSearchResponse getAllJobs();
 }
