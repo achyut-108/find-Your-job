@@ -30,4 +30,40 @@ public class CompanyJobsEntity {
 	private Integer jobTypeId;
 	@Column(name = "active")
 	private String active;
+	public BigInteger getJobId() {
+		return jobId;
+	}
+	public void setJobId(BigInteger jobId) {
+		this.jobId = jobId;
+	}
+	public Integer getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+	public String getJobTitle() {
+		return jobTitle;
+	}
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+	public String getJobDescription() {
+		return jobDescription;
+	}
+	public void setJobDescription(String jobDescription) {
+		this.jobDescription = jobDescription;
+	}
+	public Integer getJobTypeId() {
+		return jobTypeId;
+	}
+	public void setJobTypeId(Integer jobTypeId) {
+		this.jobTypeId = jobTypeId;
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
+	}
 }

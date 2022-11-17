@@ -36,29 +36,29 @@ public class JobController {
 		return jobService.addJobDetails(jobDetailsRequest);
 	}
 
-	@PostMapping(value = "/resume/editJob/post", produces = "application/json")
+	@PostMapping(value = "/job/editJob/post", produces = "application/json")
 	public JobDetailsResponse editJobDetails(@Valid @RequestBody JobDetailsRequest jobDetailsRequest) {
 		log.info("request : {}", jobDetailsRequest.toString());
 		return jobService.editJobDetails(jobDetailsRequest);
 	}
 
-	@PostMapping(value = "/resume/deleteJob/post", produces = "application/json")
+	@PostMapping(value = "/job/deleteJob/post", produces = "application/json")
 	public JobDetailsResponse deleteJobDetails(@Valid @RequestBody JobDetailsRequest jobDetailsRequest) {
 		log.info("request : {}", jobDetailsRequest.toString());
 		return jobService.deleteJobDetails(jobDetailsRequest);
 	}
 
-	@GetMapping(value = "/resume/allJobs/get", produces = "application/json")
+	@GetMapping(value = "/job/allJobs/get", produces = "application/json")
 	public JobSearchResponse getAllJobs() {
 		return jobService.getAllJobs();
 	}
 	
-	@GetMapping(value = "/resume/recruiterDetails/get/{companyId}", produces = "application/json")
+	@GetMapping(value = "/job/recruiterDetails/get/{companyId}", produces = "application/json")
 	public RecruiterDetailsResponse getRecruiterDetails(@PathVariable("companyId") Integer companyId) {
 		return jobService.getRecruiterDetails(companyId);
 	}
 	
-	@GetMapping(value = "/resume/recruiterJobDetails/get/{loginId}", produces = "application/json")
+	@GetMapping(value = "/job/recruiterJobDetails/get/{loginId}", produces = "application/json")
 	public RecruiterJobDetailsResponse getAllJobsPostedByARecruiter(@PathVariable("loginId") String loginId) {
 		return jobService.getAllJobsPostedByARecruiter(loginId);
 	}

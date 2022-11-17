@@ -21,4 +21,11 @@ public class ApiValidationBase {
 		this.addValidationError(new ValidationError(errorCode, errorDescription, fieldName, fieldValue));
 	}
 
+	public List<ValidationError> getValidationErrors() {
+		return validationErrors;
+	}
+
+	public void setValidationErrors(List<ValidationError> validationErrors) {
+		this.validationErrors = validationErrors;
+	}
 }

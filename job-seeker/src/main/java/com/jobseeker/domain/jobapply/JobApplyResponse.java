@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @JsonAutoDetect
 @EqualsAndHashCode(callSuper = false)
-public class JobDetailsResponse extends CommonServiceResponse implements Serializable {
+public class JobApplyResponse extends CommonServiceResponse implements Serializable {
 	public static final long serialVersionUID = 1L;
 
 }

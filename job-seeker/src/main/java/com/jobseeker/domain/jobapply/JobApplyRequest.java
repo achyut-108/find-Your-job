@@ -23,20 +23,13 @@ public class JobApplyRequest extends CommonServiceRequest implements Serializabl
 	public static final long serialVersionUID = 1L;
 	
 	@NotNull
-	private String jobTitle;
-	@NotNull
-	private String jobDescription;
-	@NotNull
-	private Integer jobTypeId;
-	@NotNull
-	@Size(min=1,max=1)
-	private String active;
-	private Integer salaryPerHour;
-	private String[] skillsRequired;
-	@NotNull
-	private String jobLocation;
-	private Integer ctcOffered;
-	@NotNull
-	private boolean editJob;
 	private BigInteger jobId;
+
+	public BigInteger getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(BigInteger jobId) {
+		this.jobId = jobId;
+	}
 }
