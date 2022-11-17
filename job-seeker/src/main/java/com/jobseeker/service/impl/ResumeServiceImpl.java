@@ -54,6 +54,7 @@ public class ResumeServiceImpl implements ResumeService {
 		}
 
 		UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
+		userDetailsEntity.setUserId(userEntity.getUserId());
 		userDetailsEntity.setAddress(mainSkillsRequest.getAddress());
 		userDetailsEntity.setDateOfBirth(mainSkillsRequest.getDateOfBirth());
 		userDetailsEntity.setGender(mainSkillsRequest.getGender());

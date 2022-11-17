@@ -36,4 +36,52 @@ public class MainSkillsRequest extends CommonServiceRequest implements Serializa
 	private String gender;
 	@NotNull
 	private String martialStatus;
+	public String[] getSkills() {
+		return skills;
+	}
+	public void setSkills(String[] skills) {
+		this.skills = skills;
+	}
+	public String getProfileSummary() {
+		return profileSummary;
+	}
+	public void setProfileSummary(String profileSummary) {
+		this.profileSummary = profileSummary;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getPinCode() {
+		return pinCode;
+	}
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
+	}
+	public String getHomeTown() {
+		return homeTown;
+	}
+	public void setHomeTown(String homeTown) {
+		this.homeTown = homeTown;
+	}
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getMartialStatus() {
+		return martialStatus;
+	}
+	public void setMartialStatus(String martialStatus) {
+		this.martialStatus = martialStatus;
+	}
 }
