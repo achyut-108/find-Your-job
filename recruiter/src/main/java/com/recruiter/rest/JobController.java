@@ -1,5 +1,7 @@
 package com.recruiter.rest;
 
+import java.math.BigInteger;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
+import com.recruiter.domain.job.JobSeekerDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.service.JobService;
@@ -61,5 +64,10 @@ public class JobController {
 	@GetMapping(value = "/job/recruiterJobDetails/get/{loginId}", produces = "application/json")
 	public RecruiterJobDetailsResponse getAllJobsPostedByARecruiter(@PathVariable("loginId") String loginId) {
 		return jobService.getAllJobsPostedByARecruiter(loginId);
+	}
+	
+	@GetMapping(value = "/job/recruiterJobDetails/jobSeekerDetails/{jobId}", produces = "application/json")
+	public JobSeekerDetailsResponse getAllJobSeekersAppliedForAJob(@PathVariable("jobId") BigInteger jobId) {
+		return jobService.getAllJobSeekersAppliedForAJob(jobId);
 	}
 }

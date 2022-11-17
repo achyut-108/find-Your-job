@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +22,21 @@ import com.recruiter.common.ValidationError;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
+import com.recruiter.domain.job.JobSeekerDetails;
+import com.recruiter.domain.job.JobSeekerDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.entity.CompanyJobsAndDetailsEntity;
 import com.recruiter.entity.CompanyJobsDetailsEntity;
 import com.recruiter.entity.CompanyJobsEntity;
 import com.recruiter.entity.CompanyMasterEntity;
+import com.recruiter.entity.JobApplicationHistoryEntity;
 import com.recruiter.entity.UserEntity;
 import com.recruiter.repo.CompanyJobsAndDetailsRepository;
 import com.recruiter.repo.CompanyJobsDetailsRepository;
 import com.recruiter.repo.CompanyJobsRepository;
 import com.recruiter.repo.CompanyMasterRepository;
+import com.recruiter.repo.JobApplicationHistoryRepo;
 import com.recruiter.repo.UserRepository;
 import com.recruiter.service.JobService;
 
@@ -48,6 +53,8 @@ public class JobServiceImpl implements JobService {
 	private CompanyMasterRepository companyMasterRepository;
 	@Autowired
 	private CompanyJobsAndDetailsRepository companyJobsAndDetailsRepository;
+	@Autowired
+	private JobApplicationHistoryRepo jobApplicationHistoryRepo;
 
 	private static final Logger log = LoggerFactory.getLogger(JobServiceImpl.class);
 
@@ -310,6 +317,39 @@ public class JobServiceImpl implements JobService {
 
 		response.setCompanyjobsAndDetailsList(companyJobsAndDetailsEntities);
 
+		return response;
+	}
+
+	@Override
+	public JobSeekerDetailsResponse getAllJobSeekersAppliedForAJob(BigInteger jobId) {
+		JobSeekerDetailsResponse response = new JobSeekerDetailsResponse();
+		List<JobApplicationHistoryEntity> jobApplicationHistoryList = jobApplicationHistoryRepo.findByJobId(jobId);
+
+		if (Objects.isNull(jobApplicationHistoryList) || jobApplicationHistoryList.isEmpty()) {
+
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_JOB_ID.getCode(),
+					ErrorCodes.INVALID_JOB_ID.getDescription(), "jobId", jobId));
+			return response;
+		}
+
+		List<BigInteger> jobSeekerIds = jobApplicationHistoryList.stream().distinct().map(e -> {
+			return e.getJobSeekerId();
+		}).collect(Collectors.toList());
+
+		List<UserEntity> jobSeekers = userRepository.findByUserIdIn(jobSeekerIds);
+
+		List<JobSeekerDetails> jobSeekerDetailList = jobSeekers.stream().map(e -> {
+			JobSeekerDetails jsd = new JobSeekerDetails();
+			jsd.setEmail(e.getEmail());
+			jsd.setFirstName(e.getFirstName());
+			jsd.setLastName(e.getLastName());
+			jsd.setMobileNumber(e.getMobileNumber());
+			return jsd;
+		}).collect(Collectors.toList());
+
+		response.setJobSeekerDetails(jobSeekerDetailList);
+		response.setSuccess(true);
+		response.setMessage("Fetched the details successfully");
 		return response;
 	}
 
