@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.recruiter.domain.job.JobDetailsDeleteRequest;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
@@ -46,9 +48,9 @@ public class JobController {
 	}
 
 	@PostMapping(value = "/job/deleteJob/post", produces = "application/json")
-	public JobDetailsResponse deleteJobDetails(@Valid @RequestBody JobDetailsRequest jobDetailsRequest) {
-		log.info("request : {}", jobDetailsRequest.toString());
-		return jobService.deleteJobDetails(jobDetailsRequest);
+	public JobDetailsResponse deleteJobDetails(@Valid @RequestBody JobDetailsDeleteRequest jobDetailsDeleteRequest) {
+		log.info("request : {}", jobDetailsDeleteRequest);
+		return jobService.deleteJobDetails(jobDetailsDeleteRequest);
 	}
 
 	@GetMapping(value = "/job/allJobs/get", produces = "application/json")

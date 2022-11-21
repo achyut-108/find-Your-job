@@ -19,6 +19,7 @@ import com.recruiter.common.BusinessConstants;
 import com.recruiter.common.ErrorCodes;
 import com.recruiter.common.UserTypeValidator;
 import com.recruiter.common.ValidationError;
+import com.recruiter.domain.job.JobDetailsDeleteRequest;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
@@ -78,6 +79,7 @@ public class JobServiceImpl implements JobService {
 		companyJobsEntity.setJobDescription(jobDetailsRequest.getJobDescription());
 		companyJobsEntity.setJobTitle(jobDetailsRequest.getJobTitle());
 		companyJobsEntity.setJobTypeId(jobDetailsRequest.getJobTypeId());
+		companyJobsEntity.setPostedBy(userEntity.getUserId());
 
 		companyJobsEntity = companyJobsRepository.save(companyJobsEntity);
 
@@ -180,32 +182,44 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDetailsResponse deleteJobDetails(JobDetailsRequest jobDetailsRequest) {
+	public JobDetailsResponse deleteJobDetails(JobDetailsDeleteRequest jobDetailsDeleteRequest) {
 
 		JobDetailsResponse jobDetailsResponse = new JobDetailsResponse();
-		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobDetailsRequest.getLoginId(),
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobDetailsDeleteRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
 
 		if (Objects.isNull(userEntity)) {
 			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
-					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", jobDetailsRequest.getLoginId()));
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", jobDetailsDeleteRequest.getLoginId()));
 			return jobDetailsResponse;
 		}
 
-		if (Objects.isNull(jobDetailsRequest.getJobId())) {
+		if (Objects.isNull(jobDetailsDeleteRequest.getJobId())) {
 			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_JOB_ID.getCode(),
-					ErrorCodes.INVALID_JOB_ID.getDescription(), "jobId", jobDetailsRequest.getJobId()));
+					ErrorCodes.INVALID_JOB_ID.getDescription(), "jobId", jobDetailsDeleteRequest.getJobId()));
 			return jobDetailsResponse;
 		}
 
-		companyJobsDetailsRepository.deleteByJobId(jobDetailsRequest.getJobId());
-		companyJobsRepository.deleteById(jobDetailsRequest.getJobId());
-
-		jobDetailsResponse.setMessage("Successfully deleted the job details");
-		jobDetailsResponse.setSuccess(true);
-
+		CompanyJobsEntity companyJobsEntity = companyJobsRepository.findByJobIdAndActive(jobDetailsDeleteRequest.getJobId(), BusinessConstants.ACTIVE);    
+		
+		if(Objects.isNull(companyJobsEntity)) {
+			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_JOB_ID.getCode(),
+					ErrorCodes.INVALID_JOB_ID.getDescription(), "jobId", jobDetailsDeleteRequest.getJobId()));
+			return jobDetailsResponse;
+		}
+		
+		if(companyJobsEntity.getPostedBy().compareTo(userEntity.getUserId()) == 0) {
+			companyJobsEntity.setActive(BusinessConstants.INACTIVE);
+			companyJobsRepository.save(companyJobsEntity);
+			jobDetailsResponse.setMessage("Successfully deleted the job details");
+			jobDetailsResponse.setSuccess(true);
+			return jobDetailsResponse;
+		}else {
+			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.RECRUITER_DOES_NOT_EXIST.getCode(),
+					ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "loginId", jobDetailsDeleteRequest.getLoginId()));
+		}
+		
 		return jobDetailsResponse;
-
 	}
 
 	@Override

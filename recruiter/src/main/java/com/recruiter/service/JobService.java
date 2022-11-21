@@ -2,6 +2,7 @@ package com.recruiter.service;
 
 import java.math.BigInteger;
 
+import com.recruiter.domain.job.JobDetailsDeleteRequest;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
@@ -14,7 +15,7 @@ public interface JobService {
 
 	public JobDetailsResponse editJobDetails(JobDetailsRequest jobDetailsRequest);
 
-	public JobDetailsResponse deleteJobDetails(JobDetailsRequest jobDetailsRequest);
+	public JobDetailsResponse deleteJobDetails(JobDetailsDeleteRequest jobId);
 
 	public JobSearchResponse getAllJobs();
 	

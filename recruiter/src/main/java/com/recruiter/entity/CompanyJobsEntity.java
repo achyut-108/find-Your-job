@@ -30,6 +30,8 @@ public class CompanyJobsEntity {
 	private Integer jobTypeId;
 	@Column(name = "active")
 	private String active;
+	@Column(name = "posted_by")
+	private BigInteger postedBy;
 	public BigInteger getJobId() {
 		return jobId;
 	}
@@ -66,9 +68,16 @@ public class CompanyJobsEntity {
 	public void setActive(String active) {
 		this.active = active;
 	}
+	public BigInteger getPostedBy() {
+		return postedBy;
+	}
+	public void setPostedBy(BigInteger postedBy) {
+		this.postedBy = postedBy;
+	}
 	@Override
 	public String toString() {
 		return "CompanyJobsEntity [jobId=" + jobId + ", companyId=" + companyId + ", jobTitle=" + jobTitle
-				+ ", jobDescription=" + jobDescription + ", jobTypeId=" + jobTypeId + ", active=" + active + "]";
+				+ ", jobDescription=" + jobDescription + ", jobTypeId=" + jobTypeId + ", active=" + active
+				+ ", postedBy=" + postedBy + "]";
 	}
 }

@@ -11,6 +11,5 @@ import com.recruiter.entity.CompanyJobsDetailsEntity;
 public interface CompanyJobsDetailsRepository extends CrudRepository<CompanyJobsDetailsEntity, BigInteger> {
 
 	public CompanyJobsDetailsEntity findByJobId(BigInteger jobId);
-	public void deleteByJobId(BigInteger jobId);
 
 }

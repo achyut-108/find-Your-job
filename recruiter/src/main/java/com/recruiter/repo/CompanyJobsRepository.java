@@ -21,4 +21,6 @@ public interface CompanyJobsRepository extends CrudRepository<CompanyJobsEntity,
 			+ "and cm.user_id = ?1",  nativeQuery = true)
 	public List<Object[]> jobsPostedByARecruiter(BigInteger userId);
 	
+	public CompanyJobsEntity findByJobIdAndActive(BigInteger jobId, String active);
+	
 }
