@@ -72,6 +72,7 @@ public class SignUpServiceImpl implements SignUpService {
 
 		if (Objects.isNull(newJoineeSignUpResponse.getValidationErrors()) || 
 				newJoineeSignUpResponse.getValidationErrors().isEmpty()) {
+			userEntity.setActive(BusinessConstants.ACTIVE);
 			userEntity = userRepository.save(userEntity);
 
 			if (Objects.nonNull(companyMasterEntity)) {
