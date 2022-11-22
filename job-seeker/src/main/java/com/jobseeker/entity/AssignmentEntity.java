@@ -42,5 +42,46 @@ public class AssignmentEntity {
     @Lob
     @Column(name="data")
     private byte[] data;
-    
+	public BigInteger getId() {
+		return id;
+	}
+	public void setId(BigInteger id) {
+		this.id = id;
+	}
+	public String getAssignmentName() {
+		return assignmentName;
+	}
+	public void setAssignmentName(String assignmentName) {
+		this.assignmentName = assignmentName;
+	}
+	public String getAssignmentType() {
+		return assignmentType;
+	}
+	public void setAssignmentType(String assignmentType) {
+		this.assignmentType = assignmentType;
+	}
+	public String getFileType() {
+		return fileType;
+	}
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+	public Long getTrainerId() {
+		return trainerId;
+	}
+	public void setTrainerId(Long trainerId) {
+		this.trainerId = trainerId;
+	}
+	public Long getTraineeId() {
+		return traineeId;
+	}
+	public void setTraineeId(Long traineeId) {
+		this.traineeId = traineeId;
+	}
+	public byte[] getData() {
+		return data;
+	}
+	public void setData(byte[] data) {
+		this.data = data;
+	}
 }

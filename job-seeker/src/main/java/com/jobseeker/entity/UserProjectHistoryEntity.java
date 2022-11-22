@@ -31,5 +31,40 @@ public class UserProjectHistoryEntity {
 	private String projectName;
 	@Column(name = "project_description")
 	private String projectDescription;
-
+	public BigInteger getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(BigInteger projectId) {
+		this.projectId = projectId;
+	}
+	public Integer getEmploymentId() {
+		return employmentId;
+	}
+	public void setEmploymentId(Integer employmentId) {
+		this.employmentId = employmentId;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
 }

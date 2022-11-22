@@ -2,13 +2,9 @@ package com.jobseeker.domain.resume;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.jobseeker.common.CommonServiceRequest;
-import com.jobseeker.entity.UserProjectHistoryEntity;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -32,5 +28,28 @@ public class ProjectHistoryRequest extends CommonServiceRequest implements Seria
 	private String projectName;
 	@NotNull
 	private String projectDescription;
-	
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
 }

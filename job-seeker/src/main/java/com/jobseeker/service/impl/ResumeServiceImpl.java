@@ -1,13 +1,23 @@
 package com.jobseeker.service.impl;
 
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobseeker.common.BusinessConstants;
+import com.jobseeker.common.CommonServiceRequest;
+import com.jobseeker.common.CommonServiceResponse;
 import com.jobseeker.common.ErrorCodes;
 import com.jobseeker.common.ValidationError;
+import com.jobseeker.domain.dto.UserEducationHistory;
+import com.jobseeker.domain.dto.UserEmploymentHistory;
 import com.jobseeker.domain.resume.EducationDetailsRequest;
 import com.jobseeker.domain.resume.EducationDetailsResponse;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
@@ -41,9 +51,9 @@ public class ResumeServiceImpl implements ResumeService {
 	@Autowired
 	private UserProjectHistoryRepository userProjectHistoryRepository;
 
-	public MainSkillsResponse addSkillsAndGeneralDetails(MainSkillsRequest mainSkillsRequest) {
+	public CommonServiceResponse addSkillsAndGeneralDetails(MainSkillsRequest mainSkillsRequest) {
 
-		MainSkillsResponse mainSkillsResponse = new MainSkillsResponse();
+		CommonServiceResponse mainSkillsResponse = new CommonServiceResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(mainSkillsRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
 
@@ -83,9 +93,9 @@ public class ResumeServiceImpl implements ResumeService {
 	}
 
 	@Override
-	public EducationDetailsResponse addUserEducationDetails(EducationDetailsRequest educationDetailsRequest) {
+	public CommonServiceResponse addUserEducationDetails(EducationDetailsRequest educationDetailsRequest) {
 
-		EducationDetailsResponse educationDetailsResponse = new EducationDetailsResponse();
+		CommonServiceResponse educationDetailsResponse = new CommonServiceResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(educationDetailsRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
 
@@ -112,9 +122,9 @@ public class ResumeServiceImpl implements ResumeService {
 	}
 
 	@Override
-	public EmploymentHistoryResponse addUserEmploymentHistory(EmploymentHistoryRequest employmentHistoryRequest) {
+	public CommonServiceResponse addUserEmploymentHistory(EmploymentHistoryRequest employmentHistoryRequest) {
 
-		EmploymentHistoryResponse employmentHistoryResponse = new EmploymentHistoryResponse();
+		CommonServiceResponse employmentHistoryResponse = new CommonServiceResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(employmentHistoryRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
 
@@ -149,5 +159,114 @@ public class ResumeServiceImpl implements ResumeService {
 		employmentHistoryResponse.setSuccess(true);
 		return employmentHistoryResponse;
 
+	}
+
+	@Override
+	public MainSkillsResponse getMainSkills(@Valid CommonServiceRequest commonServiceRequest) {
+
+		MainSkillsResponse mainSkillsResponse = new MainSkillsResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(commonServiceRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			mainSkillsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
+			return mainSkillsResponse;
+		}
+		
+		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUserId(userEntity.getUserId());
+		mainSkillsResponse.setSkills(userDetailsEntity.getSkills());
+		mainSkillsResponse.setSuccess(BusinessConstants.TRUE);
+		mainSkillsResponse.setMessage(BusinessConstants.SUCCESS);
+		return mainSkillsResponse;
+	}
+
+	@Override
+	public EducationDetailsResponse getUserEductaionDetails(@Valid CommonServiceRequest commonServiceRequest) {
+		EducationDetailsResponse educationDetailsResponse = new EducationDetailsResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(commonServiceRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			educationDetailsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
+			return educationDetailsResponse;
+		}
+		
+		List<Object[]> userEducationDetailsDb =  
+				userEducationHistoryRepository.getUserEducationDetails(userEntity.getUserId());
+		
+		List<UserEducationHistory> educationDetails = null ;
+		if(Objects.nonNull(userEducationDetailsDb) && !userEducationDetailsDb.isEmpty()) {
+			
+			educationDetails = userEducationDetailsDb.stream().map(obj->{
+				UserEducationHistory userEducationHistory = new UserEducationHistory();
+				userEducationHistory.setMajor(obj[0] == null ? null : (String) obj[0]);
+				userEducationHistory.setStartDate(obj[1] == null ? null : (Date) obj[1]);
+				userEducationHistory.setEndDate(obj[2] == null ? null : (Date) obj[2]);
+				userEducationHistory.setIsHighestEducaton(obj[3] == null ? null : (String) obj[3]);
+				userEducationHistory.setDegree(obj[4] == null ? null : (String) obj[4]);
+				userEducationHistory.setDegreeDescription(obj[5] == null ? null : (String) obj[5]);
+				userEducationHistory.setInstitutionName(obj[6] == null ? null : (String) obj[6]);
+				userEducationHistory.setAddress(obj[7] == null ? null : (String) obj[7]);
+				userEducationHistory.setPinCode(obj[8] == null ? null : (String) obj[8]);
+				userEducationHistory.setLocation(obj[9] == null ? null : (String) obj[9]);	
+				return userEducationHistory;
+				
+			}).collect(Collectors.toList());
+			educationDetailsResponse.setMessage("Successfully fetched the education details");
+		}else {
+			educationDetailsResponse.setMessage("education details not updated");
+		}
+		
+		educationDetailsResponse.setSuccess(BusinessConstants.TRUE);
+		educationDetailsResponse.setEducationDetails(educationDetails);
+		
+		return educationDetailsResponse;
+	}
+
+	@Override
+	public EmploymentHistoryResponse getUserEmploymentHistory(@Valid CommonServiceRequest commonServiceRequest) {
+		EmploymentHistoryResponse employmentHistoryResponse = new EmploymentHistoryResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(commonServiceRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			employmentHistoryResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
+			return employmentHistoryResponse;
+		}
+		
+		List<Object[]> userEmploymentDetailsDb =  
+				userEmploymentHistoryRepository.getEmploymentHistory(userEntity.getUserId());
+		
+		List<UserEmploymentHistory> employmentHistories = null ;
+		if(Objects.nonNull(userEmploymentDetailsDb) && !userEmploymentDetailsDb.isEmpty()) {
+			
+			employmentHistories = userEmploymentDetailsDb.stream().map(obj->{
+				
+				UserEmploymentHistory userEmploymentHistory = new UserEmploymentHistory();
+				userEmploymentHistory.setDesignation(obj[0] == null ? null : (String) obj[0]);
+				userEmploymentHistory.setEmployer(obj[1] == null ? null : (String) obj[1]);
+				userEmploymentHistory.setJobStartDate(obj[2] == null ? null : (Date) obj[2]);
+				userEmploymentHistory.setJobEndDate(obj[3] == null ? null : (Date) obj[3]);
+				userEmploymentHistory.setCurrentActiveJob(obj[4] == null ? null : (String) obj[4]);
+				userEmploymentHistory.setJobRole(obj[5] == null ? null : (String) obj[5]);
+				userEmploymentHistory.setProjectDescription(obj[6] == null ? null : (String) obj[6]);
+				userEmploymentHistory.setProjectName(obj[7] == null ? null : (String) obj[7]);
+				userEmploymentHistory.setProjectStartDate(obj[8] == null ? null : (Date) obj[8]);
+				userEmploymentHistory.setProjectEndDate(obj[9] == null ? null : (Date) obj[9]);
+				return userEmploymentHistory;
+				
+			}).collect(Collectors.toList());
+			employmentHistoryResponse.setMessage("Successfully fetched the employment details");
+		}else {
+			employmentHistoryResponse.setMessage("Employment History not updated");
+		}
+		
+		employmentHistoryResponse.setSuccess(BusinessConstants.TRUE);
+		employmentHistoryResponse.setEmploymentDetails(employmentHistories);
+		
+		return employmentHistoryResponse;
 	}
 }

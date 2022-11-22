@@ -35,5 +35,40 @@ public class EducationDetailsRequest extends CommonServiceRequest implements Ser
 	@NotNull
 	@Size(max=1,min=1)
 	private String isHighest;
-
+	public Integer getDegreeId() {
+		return degreeId;
+	}
+	public void setDegreeId(Integer degreeId) {
+		this.degreeId = degreeId;
+	}
+	public Integer getInstitutionId() {
+		return institutionId;
+	}
+	public void setInstitutionId(Integer institutionId) {
+		this.institutionId = institutionId;
+	}
+	public String getMajor() {
+		return major;
+	}
+	public void setMajor(String major) {
+		this.major = major;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getIsHighest() {
+		return isHighest;
+	}
+	public void setIsHighest(String isHighest) {
+		this.isHighest = isHighest;
+	}
 }

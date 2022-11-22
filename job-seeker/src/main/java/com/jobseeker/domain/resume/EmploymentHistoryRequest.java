@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.jobseeker.common.CommonServiceRequest;
-import com.jobseeker.entity.UserProjectHistoryEntity;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -40,5 +39,46 @@ public class EmploymentHistoryRequest extends CommonServiceRequest implements Se
 	private String role;
 	@NotEmpty
 	List<ProjectHistoryRequest> projectDetails;
-	
+	public String getDesignation() {
+		return designation;
+	}
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+	public String getEmployer() {
+		return employer;
+	}
+	public void setEmployer(String employer) {
+		this.employer = employer;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public List<ProjectHistoryRequest> getProjectDetails() {
+		return projectDetails;
+	}
+	public void setProjectDetails(List<ProjectHistoryRequest> projectDetails) {
+		this.projectDetails = projectDetails;
+	}
 }

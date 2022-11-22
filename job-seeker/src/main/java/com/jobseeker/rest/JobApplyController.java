@@ -38,5 +38,4 @@ public class JobApplyController {
 		log.info("request : {}", loginId);
 		return jobApplyService.jobsApplied(loginId);
 	}
-	
 }

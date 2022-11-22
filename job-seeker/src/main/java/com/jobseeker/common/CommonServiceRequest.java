@@ -15,4 +15,5 @@ public class CommonServiceRequest implements Serializable{
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
 	}
+	
 }

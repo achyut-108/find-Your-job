@@ -9,4 +9,6 @@ import com.jobseeker.entity.UserDetailsEntity;
 
 @Repository
 public interface UserDetailsRepository extends CrudRepository<UserDetailsEntity, BigInteger>{
+	
+	UserDetailsEntity findByUserId(BigInteger userId);
 }
