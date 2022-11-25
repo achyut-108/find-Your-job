@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `job_search` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `job_search`;
 -- MySQL dump 10.13  Distrib 8.0.31, for macos12 (x86_64)
 --
 -- Host: localhost    Database: job_search
@@ -96,7 +94,9 @@ CREATE TABLE `job_application_history` (
   `job_seeker_id` int NOT NULL,
   `creation_date` datetime NOT NULL,
   `active` varchar(1) NOT NULL,
-  PRIMARY KEY (`job_application_id`),
+  `application_accepted` varchar(25) DEFAULT NULL,
+  `application_viewed` varchar(1) DEFAULT NULL,
+  PRIMARY KEY (`job_application_id`,`job_id`),
   UNIQUE KEY `job_applicaton_id_UNIQUE` (`job_application_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -107,7 +107,7 @@ CREATE TABLE `job_application_history` (
 
 LOCK TABLES `job_application_history` WRITE;
 /*!40000 ALTER TABLE `job_application_history` DISABLE KEYS */;
-INSERT INTO `job_application_history` VALUES (1,1,1,'2022-11-15 16:00:16','Y');
+INSERT INTO `job_application_history` VALUES (1,1,1,'2022-11-15 16:00:16','Y','Y',NULL);
 /*!40000 ALTER TABLE `job_application_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -444,4 +444,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-21 10:41:50
+-- Dump completed on 2022-11-25 18:07:09
