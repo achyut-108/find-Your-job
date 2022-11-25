@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.recruiter.common.BusinessConstants;
+import com.recruiter.common.CommonServiceResponse;
 import com.recruiter.common.ErrorCodes;
 import com.recruiter.common.UserTypeValidator;
 import com.recruiter.common.ValidationError;
@@ -25,6 +26,7 @@ import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
 import com.recruiter.domain.job.JobSeekerDetails;
 import com.recruiter.domain.job.JobSeekerDetailsResponse;
+import com.recruiter.domain.job.RecruiterActionsOnJobApplicationRequest;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.entity.CompanyJobsAndDetailsEntity;
@@ -200,25 +202,27 @@ public class JobServiceImpl implements JobService {
 			return jobDetailsResponse;
 		}
 
-		CompanyJobsEntity companyJobsEntity = companyJobsRepository.findByJobIdAndActive(jobDetailsDeleteRequest.getJobId(), BusinessConstants.ACTIVE);    
-		
-		if(Objects.isNull(companyJobsEntity)) {
+		CompanyJobsEntity companyJobsEntity = companyJobsRepository
+				.findByJobIdAndActive(jobDetailsDeleteRequest.getJobId(), BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(companyJobsEntity)) {
 			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_JOB_ID.getCode(),
 					ErrorCodes.INVALID_JOB_ID.getDescription(), "jobId", jobDetailsDeleteRequest.getJobId()));
 			return jobDetailsResponse;
 		}
-		
-		if(companyJobsEntity.getPostedBy().compareTo(userEntity.getUserId()) == 0) {
+
+		if (companyJobsEntity.getPostedBy().compareTo(userEntity.getUserId()) == 0) {
 			companyJobsEntity.setActive(BusinessConstants.INACTIVE);
 			companyJobsRepository.save(companyJobsEntity);
 			jobDetailsResponse.setMessage("Successfully deleted the job details");
 			jobDetailsResponse.setSuccess(true);
 			return jobDetailsResponse;
-		}else {
+		} else {
 			jobDetailsResponse.addValidationError(new ValidationError(ErrorCodes.RECRUITER_DOES_NOT_EXIST.getCode(),
-					ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "loginId", jobDetailsDeleteRequest.getLoginId()));
+					ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "loginId",
+					jobDetailsDeleteRequest.getLoginId()));
 		}
-		
+
 		return jobDetailsResponse;
 	}
 
@@ -367,4 +371,37 @@ public class JobServiceImpl implements JobService {
 		return response;
 	}
 
+	@Override
+	public CommonServiceResponse acceptOrRejectCandidateJobApplication(
+			RecruiterActionsOnJobApplicationRequest recruiterActionsOnJobApplicationRequest) {
+
+		CommonServiceResponse response = new CommonServiceResponse();
+		if(Objects.isNull(recruiterActionsOnJobApplicationRequest.getApplicationAccepted())
+				|| !recruiterActionsOnJobApplicationRequest.validApplicationAcceptedField()) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(),
+					ErrorCodes.INVALID_INPUT_PARAMETER.getDescription(), "applicationAccepted",
+					recruiterActionsOnJobApplicationRequest.getApplicationAccepted()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+		Optional<JobApplicationHistoryEntity> jobApplicationHistoryOpt = jobApplicationHistoryRepo
+				.findByJobIdAndJobSeekerId(recruiterActionsOnJobApplicationRequest.getJobId(),
+						recruiterActionsOnJobApplicationRequest.getJobSeekerId());
+		
+		if (jobApplicationHistoryOpt.isPresent()) {
+			JobApplicationHistoryEntity jobApplicationHistory = jobApplicationHistoryOpt.get();
+			jobApplicationHistory
+					.setApplicataionAccepted(recruiterActionsOnJobApplicationRequest.getApplicationAccepted());
+			jobApplicationHistoryRepo.save(jobApplicationHistory);
+			response.setMessage("Successfully updated the job seeker application status");
+			response.setSuccess(BusinessConstants.TRUE);
+			return response;
+		}
+
+		response.addValidationError(new ValidationError(ErrorCodes.JOB_APPLICAION_DO_NOT_EXIST.getCode(),
+				ErrorCodes.JOB_APPLICAION_DO_NOT_EXIST.getDescription(), "jobId",
+				recruiterActionsOnJobApplicationRequest.getJobId()));
+		response.setSuccess(BusinessConstants.FALSE);
+		return response;
+	}
 }

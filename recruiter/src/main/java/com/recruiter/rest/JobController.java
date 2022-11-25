@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.recruiter.common.CommonServiceResponse;
 import com.recruiter.domain.job.JobDetailsDeleteRequest;
 import com.recruiter.domain.job.JobDetailsRequest;
 import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
 import com.recruiter.domain.job.JobSeekerDetailsResponse;
+import com.recruiter.domain.job.RecruiterActionsOnJobApplicationRequest;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.service.JobService;
@@ -72,4 +73,10 @@ public class JobController {
 	public JobSeekerDetailsResponse getAllJobSeekersAppliedForAJob(@PathVariable("jobId") BigInteger jobId) {
 		return jobService.getAllJobSeekersAppliedForAJob(jobId);
 	}
+	
+	@PostMapping(value = "/job/recruiterJobDetails/acceptOrRejectJobApplication/", produces = "application/json")
+	public CommonServiceResponse acceptOrRejectCandidateJobApplication(@Valid @RequestBody RecruiterActionsOnJobApplicationRequest recruiterActions) {
+		return jobService.acceptOrRejectCandidateJobApplication(recruiterActions);
+	}
+	
 }

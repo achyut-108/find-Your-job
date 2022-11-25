@@ -11,6 +11,11 @@ public interface BusinessConstants {
 	public static final Integer CONTRACTUAL = 2;
 	public static final Integer INTERNSHIP = 3;
 	static Map<Integer, String> jobTypeMap = new HashMap<>();
+	public static final Boolean TRUE = true;
+	public static final Boolean FALSE = false;
+	public static final String SUCCESS = "success";
+	public static final String ACCEPTED = "Y";
+	public static final String REJECTED = "N";
 
 	static Map<Integer, String> getJobTypeMap() {
 		
