@@ -531,7 +531,7 @@ public class ResumeServiceImpl implements ResumeService {
 
 		CommonServiceResponse response = new CommonServiceResponse();
 		String fileName = StringUtils.cleanPath(resume.getOriginalFilename());
-		ResumeEntity resumeEntity = new ResumeEntity();
+		
 
 		try {
 			// Check if the file's name contains invalid characters
@@ -552,11 +552,17 @@ public class ResumeServiceImpl implements ResumeService {
 				response.setSuccess(BusinessConstants.FALSE);
 				return response;
 			}
+			
+			ResumeEntity resumeEntity = resumeRepository.findByUserId(userEntity.getUserId());
+			
+			resumeEntity = resumeEntity == null ? new ResumeEntity() : resumeEntity;
+			
 			resumeEntity.setResumeName(fileName);
 			resumeEntity.setResumeFileType(resume.getContentType());
 			resumeEntity.setResumeContent(resume.getBytes());
 			resumeEntity.setUserId(userEntity.getUserId());
 			resumeRepository.save(resumeEntity);
+			
 		} catch (IOException ex) {
 			response.addValidationError(ErrorCodes.INVALID_DATA.getCode(), ErrorCodes.INVALID_DATA.getDescription(),
 					"fileName", fileName);
