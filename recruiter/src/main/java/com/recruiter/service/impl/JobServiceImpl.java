@@ -440,8 +440,8 @@ public class JobServiceImpl implements JobService {
 			return response;
 		}
 
-		response.addValidationError(new ValidationError(ErrorCodes.JOB_APPLICAION_DO_NOT_EXIST.getCode(),
-				ErrorCodes.JOB_APPLICAION_DO_NOT_EXIST.getDescription(), "jobId",
+		response.addValidationError(new ValidationError(ErrorCodes.JOB_APPLICAION_DOES_NOT_EXIST.getCode(),
+				ErrorCodes.JOB_APPLICAION_DOES_NOT_EXIST.getDescription(), "jobId",
 				recruiterActionsOnJobApplicationRequest.getJobId()));
 		response.setSuccess(BusinessConstants.FALSE);
 		return response;

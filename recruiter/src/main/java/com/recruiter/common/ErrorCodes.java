@@ -17,9 +17,10 @@ public enum ErrorCodes {
 	ALREADY_APPLIED_TO_JOB("FYJ_ERROR_609", "Already applied for this job"),
 	EMPLOYMENT_HISTORY_DOES_NOT_EXIST("FYJ_ERROR_610", "Employment history does not exist"),
 	PROJECT_HISTORY_DOES_NOT_EXIST("FYJ_ERROR_611", "Project history does not exist"),
-	EDUCATION_DETAILS_DO_NOT_EXIST("FYJ_ERROR_612", "Education Details does not exist"),
-	JOB_APPLICAION_DO_NOT_EXIST("FYJ_ERROR_613", "Job Application does not exist"),
-	INVALID_INPUT_PARAMETER("FYJ_ERROR_614", "The input paramter is invalid");
+	EDUCATION_DETAILS_DOES_NOT_EXIST("FYJ_ERROR_612", "Education Details does not exist"),
+	JOB_APPLICAION_DOES_NOT_EXIST("FYJ_ERROR_613", "Job Application does not exist"),
+	INVALID_INPUT_PARAMETER("FYJ_ERROR_614", "The input paramter is invalid"),
+	RESUME_DOES_NOT_EXIST("FYJ_ERROR_615", "The Resume is not uploaded");
 
 	private final String code;
 	private final String description;

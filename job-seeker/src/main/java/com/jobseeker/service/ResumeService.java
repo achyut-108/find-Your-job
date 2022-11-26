@@ -1,5 +1,7 @@
 package com.jobseeker.service;
 
+import java.math.BigInteger;
+
 import javax.validation.Valid;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
 import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
 import com.jobseeker.domain.resume.ProjectHistoryResponse;
+import com.jobseeker.domain.resume.ResumeResponse;
 
 public interface ResumeService {
 
@@ -43,5 +46,7 @@ public interface ResumeService {
 	public CommonServiceResponse editProjectHisory(ProjectHistoryEditRequest projectHistoryEditRequest);
 	
 	public CommonServiceResponse uploadResume(MultipartFile resume, String loginId);
+	
+	public ResumeResponse downloadResume(BigInteger userId);
 	
 }

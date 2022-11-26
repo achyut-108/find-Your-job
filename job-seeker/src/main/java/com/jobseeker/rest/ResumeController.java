@@ -1,11 +1,19 @@
 package com.jobseeker.rest;
 
+import java.math.BigInteger;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +34,8 @@ import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
 import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
+import com.jobseeker.domain.resume.ResumeResponse;
+import com.jobseeker.entity.ResumeEntity;
 import com.jobseeker.service.ResumeService;
 
 @RestController
@@ -117,5 +127,14 @@ public class ResumeController {
 	@PostMapping("/resume/uploadResume/{loginId}")
     public CommonServiceResponse uploadResume(@RequestParam("resume") MultipartFile resume, @PathVariable("loginId") String loginId) {
 		return resumeService.uploadResume(resume, loginId);
-	}	
+	}
+	
+	@GetMapping("/resume/downloadResume/{userId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable BigInteger userId) {
+        ResumeResponse resumeResponse = resumeService.downloadResume(userId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(resumeResponse.getResumeFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resumeResponse.getResumeName() + "\"")
+                .body(new ByteArrayResource(resumeResponse.getResumeContent()));
+    }
 }

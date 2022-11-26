@@ -1,6 +1,7 @@
 package com.jobseeker.service.impl;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +35,7 @@ import com.jobseeker.domain.resume.ProjectHistory;
 import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
 import com.jobseeker.domain.resume.ProjectHistoryRequest;
 import com.jobseeker.domain.resume.ProjectHistoryResponse;
+import com.jobseeker.domain.resume.ResumeResponse;
 import com.jobseeker.entity.ResumeEntity;
 import com.jobseeker.entity.UserDetailsEntity;
 import com.jobseeker.entity.UserEducationHistoryEntity;
@@ -575,5 +577,30 @@ public class ResumeServiceImpl implements ResumeService {
 		response.setMessage("Resume uploaded successfully");
 		response.setSuccess(BusinessConstants.TRUE);
 		return response;
+	}
+	
+	@Override
+	public ResumeResponse downloadResume(BigInteger userId) {
+		
+		ResumeResponse response = new ResumeResponse();
+		ResumeEntity resumeEntity = resumeRepository.findByUserId(userId);
+		
+		if(Objects.isNull(resumeEntity)) {
+			response.addValidationError(ErrorCodes.RESUME_DOES_NOT_EXIST.getCode(), ErrorCodes.RESUME_DOES_NOT_EXIST.getDescription(),
+					"userId", userId);
+			response.setMessage("The Resume is not present !!");
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+		
+		response.setResumeContent(resumeEntity.getResumeContent());
+		response.setResumeFileType(resumeEntity.getResumeFileType());
+		response.setResumeName(resumeEntity.getResumeName());
+		response.setUserId(resumeEntity.getUserId());
+		response.setSuccess(BusinessConstants.TRUE);
+			
+		return response;
+		
+		
 	}
 }
