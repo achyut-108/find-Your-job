@@ -16,8 +16,10 @@ public interface UserEmploymentHistoryRepository extends CrudRepository<UserEmpl
 			+ "ueh.end_date as job_end_date,\r\n"
 			+ "ueh.active as current_active_job,ueh.role as job_role,\r\n"
 			+ "uph.project_description,uph.project_name, uph.start_date as project_start_date,\r\n"
-			+ "uph.end_date as project_end_date\r\n"
+			+ "uph.end_date as project_end_date,ueh.user_employment_id\r\n"
 			+ " from user_employment_history ueh, user_project_history uph \r\n"
 			+ "where ueh.user_id = ?1 and ueh.user_employment_id = uph.employement_id", nativeQuery = true)
-	public List<Object[]> getEmploymentHistory(BigInteger userId);
+	public List<Object[]> getEmploymentHistoryAlongWithProjectDetails(BigInteger userId);
+	
+	public List<UserEmploymentHistoryEntity> findByUserId(BigInteger userId);
 }

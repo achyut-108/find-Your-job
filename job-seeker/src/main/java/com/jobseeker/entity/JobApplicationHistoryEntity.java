@@ -29,7 +29,23 @@ public class JobApplicationHistoryEntity {
 	private String active;
 	@Column(name = "creation_date")
 	private Date creationDate;
+	@Column(name = "application_accepted")
+	private String applicataionAccepted;
+	@Column(name = "application_viewed")
+	private String applicationViewed;
 	
+	public String getApplicataionAccepted() {
+		return applicataionAccepted;
+	}
+	public void setApplicataionAccepted(String applicataionAccepted) {
+		this.applicataionAccepted = applicataionAccepted;
+	}
+	public String getApplicationViewed() {
+		return applicationViewed;
+	}
+	public void setApplicationViewed(String applicationViewed) {
+		this.applicationViewed = applicationViewed;
+	}
 	public BigInteger getJobApplicationId() {
 		return jobApplicationId;
 	}

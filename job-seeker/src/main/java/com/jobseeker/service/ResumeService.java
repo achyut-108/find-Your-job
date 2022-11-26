@@ -4,12 +4,17 @@ import javax.validation.Valid;
 
 import com.jobseeker.common.CommonServiceRequest;
 import com.jobseeker.common.CommonServiceResponse;
+import com.jobseeker.domain.resume.EducationDetailsEditRequest;
 import com.jobseeker.domain.resume.EducationDetailsRequest;
 import com.jobseeker.domain.resume.EducationDetailsResponse;
+import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
+import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
+import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
+import com.jobseeker.domain.resume.ProjectHistoryResponse;
 
 public interface ResumeService {
 
@@ -24,5 +29,15 @@ public interface ResumeService {
 	public EducationDetailsResponse getUserEductaionDetails(@Valid CommonServiceRequest commonServiceRequest);
 	
 	public EmploymentHistoryResponse getUserEmploymentHistory(@Valid CommonServiceRequest commonServiceRequest);
+	
+	public CommonServiceResponse editSkillsAndGeneralDetails(MainSkillsEditRequest mainSkillsRequest);
+
+	public CommonServiceResponse editUserEducationDetails(EducationDetailsEditRequest educationDetailsRequest);
+
+	public CommonServiceResponse editUserEmploymentHistory(EmploymentHistoryEditRequest employmentHistoryRequest);
+	
+	public ProjectHistoryResponse getProjectHisoryForAEmployment(ProjectHistoryEditRequest projectHistoryEditRequest);
+	
+	public CommonServiceResponse editProjectHisory(ProjectHistoryEditRequest projectHistoryEditRequest);
 	
 }

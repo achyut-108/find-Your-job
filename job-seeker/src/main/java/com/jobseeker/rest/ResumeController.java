@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobseeker.common.CommonServiceRequest;
 import com.jobseeker.common.CommonServiceResponse;
+import com.jobseeker.domain.resume.EducationDetailsEditRequest;
 import com.jobseeker.domain.resume.EducationDetailsRequest;
 import com.jobseeker.domain.resume.EducationDetailsResponse;
+import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
+import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
+import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
 import com.jobseeker.service.ResumeService;
 
 @RestController
@@ -72,4 +76,40 @@ public class ResumeController {
 		log.info("request : {}", commonServiceRequest.toString());
 		return resumeService.getMainSkills(commonServiceRequest);
 	}
+	
+	@PostMapping(value = "/resume/editSkillsAndGeneralDetails/post", produces = "application/json")
+	public CommonServiceResponse editSkillsAndGeneralDetails(@Valid @RequestBody MainSkillsEditRequest mainSkillsEditRequest) {
+		log.info("request : {}", mainSkillsEditRequest.toString());
+		return resumeService.editSkillsAndGeneralDetails(mainSkillsEditRequest);
+	}
+	
+	@PostMapping(value = "/resume/editUserEducationDetails/post", produces = "application/json")
+	public CommonServiceResponse editUserEducationDetails(@Valid @RequestBody EducationDetailsEditRequest educationDetailsEditRequest) {
+		log.info("request : {}", educationDetailsEditRequest.toString());
+		return resumeService.editUserEducationDetails(educationDetailsEditRequest);
+	}
+	
+	/**
+	 * Responsible for adding the employment history along with project details
+	 * @param employmentHistoryRequest
+	 * @return
+	 */
+	@PostMapping(value = "/resume/editUserEmploymentHistory/post", produces = "application/json")
+	public CommonServiceResponse editUserEmploymentHistory(@Valid @RequestBody EmploymentHistoryEditRequest employmentHistoryEditRequest) {
+		log.info("request : {}", employmentHistoryEditRequest.toString());
+		return resumeService.editUserEmploymentHistory(employmentHistoryEditRequest);
+	}
+	
+	@PostMapping(value = "/resume/editUserProjectHistory/post", produces = "application/json")
+	public CommonServiceResponse editProjectHisory(@Valid @RequestBody ProjectHistoryEditRequest projectHistoryEditRequest) {
+		log.info("request : {}", projectHistoryEditRequest.toString());
+		return resumeService.editProjectHisory(projectHistoryEditRequest);
+	}
+	
+	@PostMapping(value = "/resume/getProjectHisoryForAEmployment/get", produces = "application/json")
+	public CommonServiceResponse getProjectHisoryForAEmployment(@Valid @RequestBody ProjectHistoryEditRequest projectHistoryEditRequest) {
+		log.info("request : {}", projectHistoryEditRequest.toString());
+		return resumeService.getProjectHisoryForAEmployment(projectHistoryEditRequest);
+	}
+	
 }

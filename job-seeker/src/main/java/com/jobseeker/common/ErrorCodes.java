@@ -17,7 +17,10 @@ public enum ErrorCodes {
   EMAIL_ID_ALREADY_EXIST("FYJ_ERROR_606", "Email id already in use"),
   RECRUITER_DOES_NOT_EXIST("FYJ_ERROR_607","Recruiter does not exist"),
   JOB_DOES_NOT_EXIST("FYJ_ERROR_608","Job is invalid or it has no longer active"),
-  ALREADY_APPLIED_TO_JOB("FYJ_ERROR_609","Already applied for this job");
+  ALREADY_APPLIED_TO_JOB("FYJ_ERROR_609","Already applied for this job"),
+  EMPLOYMENT_HISTORY_DOES_NOT_EXIST("FYJ_ERROR_610","Employment history does not exist"),
+  PROJECT_HISTORY_DOES_NOT_EXIST("FYJ_ERROR_611","Project history does not exist"),
+  EDUCATION_DETAILS_DO_NOT_EXIST("FYJ_ERROR_612","Education Details does not exist");
 
   private final String code;
   private final String description;

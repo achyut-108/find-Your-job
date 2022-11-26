@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.jobseeker.entity.UserEducationHistoryEntity;
 
 @Repository
-public interface UserEducationHistoryRepository extends CrudRepository<UserEducationHistoryEntity, BigInteger>{
+public interface UserEducationHistoryRepository extends CrudRepository<UserEducationHistoryEntity, Integer>{
 	
 	@Query(value = "select major,start_date,end_Date,is_highest,degree,\r\n"
 			+ "degree_description,institution_name,address,pin_code,\r\n"

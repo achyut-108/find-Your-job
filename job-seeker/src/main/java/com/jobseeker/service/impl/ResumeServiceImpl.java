@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -18,13 +19,19 @@ import com.jobseeker.common.ErrorCodes;
 import com.jobseeker.common.ValidationError;
 import com.jobseeker.domain.dto.UserEducationHistory;
 import com.jobseeker.domain.dto.UserEmploymentHistory;
+import com.jobseeker.domain.resume.EducationDetailsEditRequest;
 import com.jobseeker.domain.resume.EducationDetailsRequest;
 import com.jobseeker.domain.resume.EducationDetailsResponse;
+import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
+import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
+import com.jobseeker.domain.resume.ProjectHistory;
+import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
 import com.jobseeker.domain.resume.ProjectHistoryRequest;
+import com.jobseeker.domain.resume.ProjectHistoryResponse;
 import com.jobseeker.entity.UserDetailsEntity;
 import com.jobseeker.entity.UserEducationHistoryEntity;
 import com.jobseeker.entity.UserEmploymentHistoryEntity;
@@ -173,7 +180,7 @@ public class ResumeServiceImpl implements ResumeService {
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
 			return mainSkillsResponse;
 		}
-		
+
 		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUserId(userEntity.getUserId());
 		mainSkillsResponse.setSkills(userDetailsEntity.getSkills());
 		mainSkillsResponse.setSuccess(BusinessConstants.TRUE);
@@ -192,14 +199,14 @@ public class ResumeServiceImpl implements ResumeService {
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
 			return educationDetailsResponse;
 		}
-		
-		List<Object[]> userEducationDetailsDb =  
-				userEducationHistoryRepository.getUserEducationDetails(userEntity.getUserId());
-		
-		List<UserEducationHistory> educationDetails = null ;
-		if(Objects.nonNull(userEducationDetailsDb) && !userEducationDetailsDb.isEmpty()) {
-			
-			educationDetails = userEducationDetailsDb.stream().map(obj->{
+
+		List<Object[]> userEducationDetailsDb = userEducationHistoryRepository
+				.getUserEducationDetails(userEntity.getUserId());
+
+		List<UserEducationHistory> educationDetails = null;
+		if (Objects.nonNull(userEducationDetailsDb) && !userEducationDetailsDb.isEmpty()) {
+
+			educationDetails = userEducationDetailsDb.stream().map(obj -> {
 				UserEducationHistory userEducationHistory = new UserEducationHistory();
 				userEducationHistory.setMajor(obj[0] == null ? null : (String) obj[0]);
 				userEducationHistory.setStartDate(obj[1] == null ? null : (Date) obj[1]);
@@ -210,18 +217,18 @@ public class ResumeServiceImpl implements ResumeService {
 				userEducationHistory.setInstitutionName(obj[6] == null ? null : (String) obj[6]);
 				userEducationHistory.setAddress(obj[7] == null ? null : (String) obj[7]);
 				userEducationHistory.setPinCode(obj[8] == null ? null : (String) obj[8]);
-				userEducationHistory.setLocation(obj[9] == null ? null : (String) obj[9]);	
+				userEducationHistory.setLocation(obj[9] == null ? null : (String) obj[9]);
 				return userEducationHistory;
-				
+
 			}).collect(Collectors.toList());
 			educationDetailsResponse.setMessage("Successfully fetched the education details");
-		}else {
+		} else {
 			educationDetailsResponse.setMessage("education details not updated");
 		}
-		
+
 		educationDetailsResponse.setSuccess(BusinessConstants.TRUE);
 		educationDetailsResponse.setEducationDetails(educationDetails);
-		
+
 		return educationDetailsResponse;
 	}
 
@@ -236,37 +243,275 @@ public class ResumeServiceImpl implements ResumeService {
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
 			return employmentHistoryResponse;
 		}
-		
-		List<Object[]> userEmploymentDetailsDb =  
-				userEmploymentHistoryRepository.getEmploymentHistory(userEntity.getUserId());
-		
-		List<UserEmploymentHistory> employmentHistories = null ;
-		if(Objects.nonNull(userEmploymentDetailsDb) && !userEmploymentDetailsDb.isEmpty()) {
-			
-			employmentHistories = userEmploymentDetailsDb.stream().map(obj->{
-				
+
+		List<UserEmploymentHistoryEntity> userEmploymentDetailsDb = userEmploymentHistoryRepository
+				.findByUserId(userEntity.getUserId());
+
+		List<UserEmploymentHistory> employmentHistories = null;
+		if (Objects.nonNull(userEmploymentDetailsDb) && !userEmploymentDetailsDb.isEmpty()) {
+
+			employmentHistories = userEmploymentDetailsDb.stream().map(userEmployment -> {
 				UserEmploymentHistory userEmploymentHistory = new UserEmploymentHistory();
-				userEmploymentHistory.setDesignation(obj[0] == null ? null : (String) obj[0]);
-				userEmploymentHistory.setEmployer(obj[1] == null ? null : (String) obj[1]);
-				userEmploymentHistory.setJobStartDate(obj[2] == null ? null : (Date) obj[2]);
-				userEmploymentHistory.setJobEndDate(obj[3] == null ? null : (Date) obj[3]);
-				userEmploymentHistory.setCurrentActiveJob(obj[4] == null ? null : (String) obj[4]);
-				userEmploymentHistory.setJobRole(obj[5] == null ? null : (String) obj[5]);
-				userEmploymentHistory.setProjectDescription(obj[6] == null ? null : (String) obj[6]);
-				userEmploymentHistory.setProjectName(obj[7] == null ? null : (String) obj[7]);
-				userEmploymentHistory.setProjectStartDate(obj[8] == null ? null : (Date) obj[8]);
-				userEmploymentHistory.setProjectEndDate(obj[9] == null ? null : (Date) obj[9]);
+				userEmploymentHistory.setDesignation(userEmployment.getDesignation());
+				userEmploymentHistory.setEmployer(userEmployment.getEmployer());
+				userEmploymentHistory.setJobStartDate(userEmployment.getStartDate());
+				userEmploymentHistory.setJobEndDate(userEmployment.getEndDate());
+				userEmploymentHistory.setCurrentActiveJob(userEmployment.getActive());
+				userEmploymentHistory.setJobRole(userEmployment.getRole());
+				userEmploymentHistory.setUserEmploymentHistoryId(userEmployment.getUserEmploymentId());
 				return userEmploymentHistory;
-				
+
 			}).collect(Collectors.toList());
 			employmentHistoryResponse.setMessage("Successfully fetched the employment details");
-		}else {
+		} else {
 			employmentHistoryResponse.setMessage("Employment History not updated");
 		}
-		
+
 		employmentHistoryResponse.setSuccess(BusinessConstants.TRUE);
 		employmentHistoryResponse.setEmploymentDetails(employmentHistories);
-		
+
 		return employmentHistoryResponse;
 	}
+
+	@Override
+	public ProjectHistoryResponse getProjectHisoryForAEmployment(ProjectHistoryEditRequest projectHistoryEditRequest) {
+		ProjectHistoryResponse projectHistoryResponse = new ProjectHistoryResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(projectHistoryEditRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			projectHistoryResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", projectHistoryEditRequest.getLoginId()));
+			projectHistoryResponse.setSuccess(BusinessConstants.FALSE);
+			return projectHistoryResponse;
+		}
+
+		List<UserProjectHistoryEntity> projectDetailsOfAEmploymentDb = userProjectHistoryRepository
+				.findByEmploymentId(projectHistoryEditRequest.getEmploymentId());
+
+		List<ProjectHistory> projectHistories = null;
+		if (Objects.nonNull(projectDetailsOfAEmploymentDb) && !projectDetailsOfAEmploymentDb.isEmpty()) {
+
+			projectHistories = projectDetailsOfAEmploymentDb.stream().map(projectHistoryDb -> {
+				ProjectHistory projectHistory = new ProjectHistory();
+				projectHistory.setEmploymentId(projectHistoryDb.getEmploymentId());
+				projectHistory.setProjectEndDate(projectHistoryDb.getEndDate());
+				projectHistory.setProjectDescription(projectHistoryDb.getProjectDescription());
+				projectHistory.setProjectId(projectHistoryDb.getProjectId());
+				projectHistory.setProjectName(projectHistoryDb.getProjectName());
+				projectHistory.setProjectStartDate(projectHistoryDb.getStartDate());
+				return projectHistory;
+			}).collect(Collectors.toList());
+
+			projectHistoryResponse.setMessage("Successfully fetched the project details");
+		} else {
+			projectHistoryResponse.setMessage("Project History not updated");
+		}
+
+		projectHistoryResponse.setSuccess(BusinessConstants.TRUE);
+		projectHistoryResponse.setProjectHistories(projectHistories);
+
+		return projectHistoryResponse;
+	}
+
+	@Override
+	public CommonServiceResponse editSkillsAndGeneralDetails(MainSkillsEditRequest mainSkillsRequest) {
+		CommonServiceResponse mainSkillsResponse = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(mainSkillsRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			mainSkillsResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", mainSkillsRequest.getLoginId()));
+			return mainSkillsResponse;
+		}
+
+		UserDetailsEntity userDetailsEntity = userDetailsRepository.findByUserId(userEntity.getUserId());
+
+		if (Objects.nonNull(userDetailsEntity)) {
+			userDetailsEntity.setAddress(mainSkillsRequest.getAddress() != null ? mainSkillsRequest.getAddress()
+					: userDetailsEntity.getAddress());
+			userDetailsEntity
+					.setDateOfBirth(mainSkillsRequest.getDateOfBirth() != null ? mainSkillsRequest.getDateOfBirth()
+							: userDetailsEntity.getDateOfBirth());
+			userDetailsEntity.setGender(mainSkillsRequest.getGender() != null ? mainSkillsRequest.getGender()
+					: userDetailsEntity.getGender());
+			userDetailsEntity.setHomeTown(mainSkillsRequest.getHomeTown() != null ? mainSkillsRequest.getHomeTown()
+					: userDetailsEntity.getHomeTown());
+			userDetailsEntity.setMartialStatus(
+					mainSkillsRequest.getMartialStatus() != null ? mainSkillsRequest.getMartialStatus()
+							: userDetailsEntity.getMartialStatus());
+			userDetailsEntity.setPinCode(mainSkillsRequest.getPinCode() != null ? mainSkillsRequest.getPinCode()
+					: userDetailsEntity.getPinCode());
+			userDetailsEntity.setProfileSummary(
+					mainSkillsRequest.getProfileSummary() != null ? mainSkillsRequest.getProfileSummary()
+							: userDetailsEntity.getProfileSummary());
+		}
+
+		if (mainSkillsRequest.getSkills() != null) {
+			int index = 1;
+			StringBuilder sb = new StringBuilder();
+			for (String string : mainSkillsRequest.getSkills()) {
+
+				index++;
+				sb.append(string);
+				if (index <= mainSkillsRequest.getSkills().length)
+					sb.append(",");
+			}
+
+			userDetailsEntity.setSkills(sb.toString());
+		}
+
+		userDetailsRepository.save(userDetailsEntity);
+
+		mainSkillsResponse.setMessage("Successfully edited the user Skills");
+		mainSkillsResponse.setSuccess(true);
+		return mainSkillsResponse;
+	}
+
+	/**
+	 * TO DO : Validation for DegreeId and the InstitutionId
+	 */
+	@Override
+	public CommonServiceResponse editUserEducationDetails(EducationDetailsEditRequest educationDetailsEditRequest) {
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(educationDetailsEditRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		CommonServiceResponse commonServiceResponse = new CommonServiceResponse();
+		if (Objects.isNull(userEntity)) {
+			commonServiceResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", educationDetailsEditRequest.getLoginId()));
+			commonServiceResponse.setSuccess(BusinessConstants.FALSE);
+			return commonServiceResponse;
+		}
+
+		Optional<UserEducationHistoryEntity> userEducationDetailsDbOpt = userEducationHistoryRepository
+				.findById(educationDetailsEditRequest.getUserEducationId());
+
+		if (!userEducationDetailsDbOpt.isPresent()) {
+			commonServiceResponse
+					.addValidationError(new ValidationError(ErrorCodes.EDUCATION_DETAILS_DO_NOT_EXIST.getCode(),
+							ErrorCodes.EDUCATION_DETAILS_DO_NOT_EXIST.getDescription(), "userEducationId",
+							educationDetailsEditRequest.getUserEducationId()));
+			commonServiceResponse.setSuccess(BusinessConstants.FALSE);
+		} else {
+			UserEducationHistoryEntity userEducationDetailsDb = userEducationDetailsDbOpt.get();
+			userEducationDetailsDb.setDegreeId(educationDetailsEditRequest.getDegreeId()!=null ? 
+					educationDetailsEditRequest.getDegreeId() : userEducationDetailsDb.getDegreeId());
+			userEducationDetailsDb.setEndDate(educationDetailsEditRequest.getEndDate()!=null ?
+					educationDetailsEditRequest.getEndDate() : userEducationDetailsDb.getEndDate());
+			userEducationDetailsDb.setInstitutionId(educationDetailsEditRequest.getInstitutionId()!=null ?
+					educationDetailsEditRequest.getInstitutionId() : userEducationDetailsDb.getInstitutionId());
+			userEducationDetailsDb.setIsHighestEducaton(educationDetailsEditRequest.getIsHighest()!=null ? educationDetailsEditRequest.getIsHighest()
+					: userEducationDetailsDb.getIsHighestEducaton());
+			userEducationDetailsDb.setMajor(educationDetailsEditRequest.getMajor()!=null ? 
+					educationDetailsEditRequest.getMajor() : userEducationDetailsDb.getMajor());
+			userEducationDetailsDb.setStartDate(educationDetailsEditRequest.getStartDate()!=null
+					? educationDetailsEditRequest.getStartDate() : userEducationDetailsDb.getStartDate());
+			userEducationHistoryRepository.save(userEducationDetailsDb);
+			commonServiceResponse.setMessage("education details not updated");
+			commonServiceResponse.setSuccess(BusinessConstants.TRUE);
+		}
+
+		return commonServiceResponse;
+	}
+
+	@Override
+	public CommonServiceResponse editUserEmploymentHistory(EmploymentHistoryEditRequest employmentHistoryRequest) {
+		CommonServiceResponse employmentHistoryResponse = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(employmentHistoryRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			employmentHistoryResponse.setSuccess(BusinessConstants.FALSE);
+			employmentHistoryResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", employmentHistoryRequest.getLoginId()));
+			return employmentHistoryResponse;
+		}
+
+		Optional<UserEmploymentHistoryEntity> userEmploymentHistoryOpt = userEmploymentHistoryRepository
+				.findById(employmentHistoryRequest.getUserEmploymentHistoryId());
+
+		if (!userEmploymentHistoryOpt.isPresent()) {
+			employmentHistoryResponse.setSuccess(BusinessConstants.FALSE);
+			employmentHistoryResponse
+					.addValidationError(new ValidationError(ErrorCodes.EMPLOYMENT_HISTORY_DOES_NOT_EXIST.getCode(),
+							ErrorCodes.EMPLOYMENT_HISTORY_DOES_NOT_EXIST.getDescription(), "userEmploymentHistoryId",
+							employmentHistoryRequest.getUserEmploymentHistoryId()));
+			return employmentHistoryResponse;
+		}
+
+		UserEmploymentHistoryEntity userEmploymentHistoryEntity = userEmploymentHistoryOpt.get();
+
+		userEmploymentHistoryEntity
+				.setActive(employmentHistoryRequest.getActive() != null ? employmentHistoryRequest.getActive()
+						: userEmploymentHistoryEntity.getActive());
+		userEmploymentHistoryEntity.setDesignation(
+				employmentHistoryRequest.getDesignation() != null ? employmentHistoryRequest.getDesignation()
+						: userEmploymentHistoryEntity.getDesignation());
+		userEmploymentHistoryEntity
+				.setEmployer(employmentHistoryRequest.getEmployer() != null ? employmentHistoryRequest.getEmployer()
+						: userEmploymentHistoryEntity.getEmployer());
+		userEmploymentHistoryEntity
+				.setEndDate(employmentHistoryRequest.getEndDate() != null ? employmentHistoryRequest.getEndDate()
+						: userEmploymentHistoryEntity.getEndDate());
+		userEmploymentHistoryEntity
+				.setRole(employmentHistoryRequest.getRole() != null ? employmentHistoryRequest.getRole()
+						: userEmploymentHistoryEntity.getRole());
+		userEmploymentHistoryEntity
+				.setStartDate(employmentHistoryRequest.getStartDate() != null ? employmentHistoryRequest.getStartDate()
+						: userEmploymentHistoryEntity.getStartDate());
+
+		userEmploymentHistoryEntity = userEmploymentHistoryRepository.save(userEmploymentHistoryEntity);
+		employmentHistoryResponse.setMessage("Successfully added the user employment history");
+		employmentHistoryResponse.setSuccess(true);
+		return employmentHistoryResponse;
+
+	}
+
+	@Override
+	public CommonServiceResponse editProjectHisory(ProjectHistoryEditRequest projectHistoryEditRequest) {
+		CommonServiceResponse commonServiceResponse = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(projectHistoryEditRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)) {
+			commonServiceResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", projectHistoryEditRequest.getLoginId()));
+			commonServiceResponse.setSuccess(BusinessConstants.FALSE);
+			return commonServiceResponse;
+		}
+
+		Optional<UserProjectHistoryEntity> projectHistoryDbOpt = userProjectHistoryRepository
+				.findById(projectHistoryEditRequest.getProjectId());
+
+		if (!projectHistoryDbOpt.isPresent()) {
+			commonServiceResponse
+					.addValidationError(new ValidationError(ErrorCodes.PROJECT_HISTORY_DOES_NOT_EXIST.getCode(),
+							ErrorCodes.PROJECT_HISTORY_DOES_NOT_EXIST.getDescription(), "loginId",
+							projectHistoryEditRequest.getLoginId()));
+			commonServiceResponse.setSuccess(BusinessConstants.FALSE);
+			return commonServiceResponse;
+		} else {
+			UserProjectHistoryEntity projectHistoryDb = projectHistoryDbOpt.get();
+			projectHistoryDb
+					.setEndDate(projectHistoryEditRequest.getEndDate() != null ? projectHistoryEditRequest.getEndDate()
+							: projectHistoryDb.getEndDate());
+			projectHistoryDb.setProjectDescription(projectHistoryEditRequest.getProjectDescription() != null
+					? projectHistoryEditRequest.getProjectDescription()
+					: projectHistoryEditRequest.getProjectDescription());
+			projectHistoryDb.setProjectName(
+					projectHistoryEditRequest.getProjectName() != null ? projectHistoryEditRequest.getProjectName()
+							: projectHistoryDb.getProjectName());
+			projectHistoryDb.setStartDate(
+					projectHistoryEditRequest.getStartDate() != null ? projectHistoryEditRequest.getStartDate()
+							: projectHistoryDb.getStartDate());
+			userProjectHistoryRepository.save(projectHistoryDb);
+			commonServiceResponse.setMessage("Project History successfully updated");
+			commonServiceResponse.setSuccess(true);
+		}
+
+		return commonServiceResponse;
+	}
+
 }
