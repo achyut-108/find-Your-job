@@ -1,13 +1,11 @@
 package com.recruiter.domain.recruiterdetails;
 
 import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
+import java.math.BigInteger;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.recruiter.common.CommonServiceResponse;
-import com.recruiter.entity.CompanyJobsAndDetailsEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +21,21 @@ public class RecruiterDetailsResponse extends CommonServiceResponse implements S
 	private String email;
 	private String mobileNumber;
 	private String active;
+	private BigInteger userId;
+	private String address;
+	private String profileSummary;
+	private String homeTown;
+	private String pinCode;
+	private Date dateOfBirth;
+	private String gender;
+	private String marialStatus;
+	
+	public BigInteger getUserId() {
+		return userId;
+	}
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
+	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -52,6 +65,48 @@ public class RecruiterDetailsResponse extends CommonServiceResponse implements S
 	}
 	public void setActive(String active) {
 		this.active = active;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getProfileSummary() {
+		return profileSummary;
+	}
+	public void setProfileSummary(String profileSummary) {
+		this.profileSummary = profileSummary;
+	}
+	public String getHomeTown() {
+		return homeTown;
+	}
+	public void setHomeTown(String homeTown) {
+		this.homeTown = homeTown;
+	}
+	public String getPinCode() {
+		return pinCode;
+	}
+	public void setPinCode(String pinCode) {
+		this.pinCode = pinCode;
+	}
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getMarialStatus() {
+		return marialStatus;
+	}
+	public void setMarialStatus(String marialStatus) {
+		this.marialStatus = marialStatus;
 	}
 	@Override
 	public String toString() {

@@ -34,12 +34,14 @@ import com.recruiter.entity.CompanyJobsDetailsEntity;
 import com.recruiter.entity.CompanyJobsEntity;
 import com.recruiter.entity.CompanyMasterEntity;
 import com.recruiter.entity.JobApplicationHistoryEntity;
+import com.recruiter.entity.UserDetailsEntity;
 import com.recruiter.entity.UserEntity;
 import com.recruiter.repo.CompanyJobsAndDetailsRepository;
 import com.recruiter.repo.CompanyJobsDetailsRepository;
 import com.recruiter.repo.CompanyJobsRepository;
 import com.recruiter.repo.CompanyMasterRepository;
 import com.recruiter.repo.JobApplicationHistoryRepo;
+import com.recruiter.repo.UserDetailsRepository;
 import com.recruiter.repo.UserRepository;
 import com.recruiter.service.JobService;
 
@@ -58,6 +60,8 @@ public class JobServiceImpl implements JobService {
 	private CompanyJobsAndDetailsRepository companyJobsAndDetailsRepository;
 	@Autowired
 	private JobApplicationHistoryRepo jobApplicationHistoryRepo;
+	@Autowired
+	private UserDetailsRepository userDetailsRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(JobServiceImpl.class);
 
@@ -296,6 +300,7 @@ public class JobServiceImpl implements JobService {
 		if (Objects.isNull(userEntity)) {
 			response.addValidationError(new ValidationError(ErrorCodes.RECRUITER_DOES_NOT_EXIST.getCode(),
 					ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "loginId", loginId));
+			response.setSuccess(BusinessConstants.FALSE);
 			return response;
 		}
 
@@ -304,6 +309,23 @@ public class JobServiceImpl implements JobService {
 		response.setFirstName(userEntity.getFirstName());
 		response.setLastName(userEntity.getLastName());
 		response.setMobileNumber(userEntity.getMobileNumber());
+		response.setUserId(userEntity.getUserId());
+
+		Optional<UserDetailsEntity> userDetailsEntityOpt = userDetailsRepository.findById(userEntity.getUserId());
+
+		if (userDetailsEntityOpt.isPresent()) {
+			UserDetailsEntity userDetailsEntity = userDetailsEntityOpt.get();
+			response.setAddress(userDetailsEntity.getAddress());
+			response.setDateOfBirth(userDetailsEntity.getDateOfBirth());
+			response.setGender(userDetailsEntity.getGender());
+			response.setHomeTown(userDetailsEntity.getHomeTown());
+			response.setMarialStatus(userDetailsEntity.getMartialStatus());
+			response.setPinCode(userDetailsEntity.getPinCode());
+			response.setProfileSummary(userDetailsEntity.getProfileSummary());
+		}
+
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully fetched the basic details");
 		return response;
 	}
 
