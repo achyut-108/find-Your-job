@@ -1,5 +1,6 @@
 package com.jobseeker.service.impl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jobseeker.common.BusinessConstants;
 import com.jobseeker.common.CommonServiceRequest;
@@ -24,8 +27,6 @@ import com.jobseeker.domain.resume.EducationDetailsResponse;
 import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
-import com.jobseeker.domain.resume.JobApplicationStatusRequest;
-import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
@@ -33,11 +34,13 @@ import com.jobseeker.domain.resume.ProjectHistory;
 import com.jobseeker.domain.resume.ProjectHistoryEditRequest;
 import com.jobseeker.domain.resume.ProjectHistoryRequest;
 import com.jobseeker.domain.resume.ProjectHistoryResponse;
+import com.jobseeker.entity.ResumeEntity;
 import com.jobseeker.entity.UserDetailsEntity;
 import com.jobseeker.entity.UserEducationHistoryEntity;
 import com.jobseeker.entity.UserEmploymentHistoryEntity;
 import com.jobseeker.entity.UserEntity;
 import com.jobseeker.entity.UserProjectHistoryEntity;
+import com.jobseeker.repo.ResumeRepository;
 import com.jobseeker.repo.UserDetailsRepository;
 import com.jobseeker.repo.UserEducationHistoryRepository;
 import com.jobseeker.repo.UserEmploymentHistoryRepository;
@@ -58,6 +61,8 @@ public class ResumeServiceImpl implements ResumeService {
 	private UserEmploymentHistoryRepository userEmploymentHistoryRepository;
 	@Autowired
 	private UserProjectHistoryRepository userProjectHistoryRepository;
+	@Autowired
+	private ResumeRepository resumeRepository;
 
 	public CommonServiceResponse addSkillsAndGeneralDetails(MainSkillsRequest mainSkillsRequest) {
 
@@ -397,18 +402,24 @@ public class ResumeServiceImpl implements ResumeService {
 			commonServiceResponse.setSuccess(BusinessConstants.FALSE);
 		} else {
 			UserEducationHistoryEntity userEducationDetailsDb = userEducationDetailsDbOpt.get();
-			userEducationDetailsDb.setDegreeId(educationDetailsEditRequest.getDegreeId()!=null ? 
-					educationDetailsEditRequest.getDegreeId() : userEducationDetailsDb.getDegreeId());
-			userEducationDetailsDb.setEndDate(educationDetailsEditRequest.getEndDate()!=null ?
-					educationDetailsEditRequest.getEndDate() : userEducationDetailsDb.getEndDate());
-			userEducationDetailsDb.setInstitutionId(educationDetailsEditRequest.getInstitutionId()!=null ?
-					educationDetailsEditRequest.getInstitutionId() : userEducationDetailsDb.getInstitutionId());
-			userEducationDetailsDb.setIsHighestEducaton(educationDetailsEditRequest.getIsHighest()!=null ? educationDetailsEditRequest.getIsHighest()
-					: userEducationDetailsDb.getIsHighestEducaton());
-			userEducationDetailsDb.setMajor(educationDetailsEditRequest.getMajor()!=null ? 
-					educationDetailsEditRequest.getMajor() : userEducationDetailsDb.getMajor());
-			userEducationDetailsDb.setStartDate(educationDetailsEditRequest.getStartDate()!=null
-					? educationDetailsEditRequest.getStartDate() : userEducationDetailsDb.getStartDate());
+			userEducationDetailsDb.setDegreeId(
+					educationDetailsEditRequest.getDegreeId() != null ? educationDetailsEditRequest.getDegreeId()
+							: userEducationDetailsDb.getDegreeId());
+			userEducationDetailsDb.setEndDate(
+					educationDetailsEditRequest.getEndDate() != null ? educationDetailsEditRequest.getEndDate()
+							: userEducationDetailsDb.getEndDate());
+			userEducationDetailsDb.setInstitutionId(educationDetailsEditRequest.getInstitutionId() != null
+					? educationDetailsEditRequest.getInstitutionId()
+					: userEducationDetailsDb.getInstitutionId());
+			userEducationDetailsDb.setIsHighestEducaton(
+					educationDetailsEditRequest.getIsHighest() != null ? educationDetailsEditRequest.getIsHighest()
+							: userEducationDetailsDb.getIsHighestEducaton());
+			userEducationDetailsDb
+					.setMajor(educationDetailsEditRequest.getMajor() != null ? educationDetailsEditRequest.getMajor()
+							: userEducationDetailsDb.getMajor());
+			userEducationDetailsDb.setStartDate(
+					educationDetailsEditRequest.getStartDate() != null ? educationDetailsEditRequest.getStartDate()
+							: userEducationDetailsDb.getStartDate());
 			userEducationHistoryRepository.save(userEducationDetailsDb);
 			commonServiceResponse.setMessage("education details not updated");
 			commonServiceResponse.setSuccess(BusinessConstants.TRUE);
@@ -513,5 +524,50 @@ public class ResumeServiceImpl implements ResumeService {
 		}
 
 		return commonServiceResponse;
+	}
+
+	@Override
+	public CommonServiceResponse uploadResume(MultipartFile resume, String loginId) {
+
+		CommonServiceResponse response = new CommonServiceResponse();
+		String fileName = StringUtils.cleanPath(resume.getOriginalFilename());
+		ResumeEntity resumeEntity = new ResumeEntity();
+
+		try {
+			// Check if the file's name contains invalid characters
+			if (fileName.contains("..")) {
+				response.addValidationError(ErrorCodes.INVALID_DATA.getCode(), ErrorCodes.INVALID_DATA.getDescription(),
+						"fileName", fileName);
+				response.setMessage("Sorry! Filename contains invalid path sequence " + fileName);
+				response.setSuccess(BusinessConstants.FALSE);
+				return response;
+			}
+
+			UserEntity userEntity = userRepository.findByLoginIdAndActive(loginId,
+					BusinessConstants.ACTIVE);
+
+			if (Objects.isNull(userEntity)) {
+				response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+						ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", loginId));
+				response.setSuccess(BusinessConstants.FALSE);
+				return response;
+			}
+			resumeEntity.setResumeName(fileName);
+			resumeEntity.setResumeFileType(resume.getContentType());
+			resumeEntity.setResumeContent(resume.getBytes());
+			resumeEntity.setUserId(userEntity.getUserId());
+			resumeRepository.save(resumeEntity);
+		} catch (IOException ex) {
+			response.addValidationError(ErrorCodes.INVALID_DATA.getCode(), ErrorCodes.INVALID_DATA.getDescription(),
+					"fileName", fileName);
+			response.setMessage("Sorry! Filename contains invalid path sequence " + fileName);
+			response.setSuccess(BusinessConstants.FALSE);
+			ex.printStackTrace();
+			return response;
+		}
+
+		response.setMessage("Resume uploaded successfully");
+		response.setSuccess(BusinessConstants.TRUE);
+		return response;
 	}
 }

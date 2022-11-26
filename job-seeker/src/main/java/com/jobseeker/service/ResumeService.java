@@ -2,6 +2,8 @@ package com.jobseeker.service;
 
 import javax.validation.Valid;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jobseeker.common.CommonServiceRequest;
 import com.jobseeker.common.CommonServiceResponse;
 import com.jobseeker.domain.resume.EducationDetailsEditRequest;
@@ -10,8 +12,6 @@ import com.jobseeker.domain.resume.EducationDetailsResponse;
 import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
-import com.jobseeker.domain.resume.JobApplicationStatusRequest;
-import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
@@ -41,5 +41,7 @@ public interface ResumeService {
 	public ProjectHistoryResponse getProjectHisoryForAEmployment(ProjectHistoryEditRequest projectHistoryEditRequest);
 	
 	public CommonServiceResponse editProjectHisory(ProjectHistoryEditRequest projectHistoryEditRequest);
+	
+	public CommonServiceResponse uploadResume(MultipartFile resume, String loginId);
 	
 }
