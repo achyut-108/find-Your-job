@@ -59,9 +59,14 @@ public class JobController {
 		return jobService.getAllJobs();
 	}
 	
-	@GetMapping(value = "/job/recruiterDetails/get/{companyId}", produces = "application/json")
-	public RecruiterDetailsResponse getRecruiterDetails(@PathVariable("companyId") Integer companyId) {
-		return jobService.getRecruiterDetails(companyId);
+	@GetMapping(value = "/job/recruiterBasicDetailsByCompanyId/get/{companyId}", produces = "application/json")
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByCompanyId(@PathVariable("companyId") Integer companyId) {
+		return jobService.getRecruiterBasicDetailsByCompanyId(companyId);
+	}
+	
+	@GetMapping(value = "/job/recruiterBasicDetailsByLoginId/get/{loginId}", produces = "application/json")
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByLoginId(@PathVariable("loginId") String loginId) {
+		return jobService.getRecruiterBasicDetailsByLoginId(loginId);
 	}
 	
 	@GetMapping(value = "/job/recruiterJobDetails/get/{loginId}", produces = "application/json")

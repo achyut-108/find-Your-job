@@ -263,7 +263,7 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public RecruiterDetailsResponse getRecruiterDetails(Integer companyId) {
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByCompanyId(Integer companyId) {
 		Optional<CompanyMasterEntity> companyMasterOpt = companyMasterRepository.findById(companyId);
 
 		RecruiterDetailsResponse response = new RecruiterDetailsResponse();
@@ -285,6 +285,25 @@ public class JobServiceImpl implements JobService {
 		}
 		response.addValidationError(
 				new ValidationError("FYJ_ERROR_607", "Recruiter does not exist", "companyId", companyId));
+		return response;
+	}
+
+	@Override
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByLoginId(String loginId) {
+
+		RecruiterDetailsResponse response = new RecruiterDetailsResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(loginId, BusinessConstants.ACTIVE);
+		if (Objects.isNull(userEntity)) {
+			response.addValidationError(new ValidationError(ErrorCodes.RECRUITER_DOES_NOT_EXIST.getCode(),
+					ErrorCodes.RECRUITER_DOES_NOT_EXIST.getDescription(), "loginId", loginId));
+			return response;
+		}
+
+		response.setActive(userEntity.getActive());
+		response.setEmail(userEntity.getEmail());
+		response.setFirstName(userEntity.getFirstName());
+		response.setLastName(userEntity.getLastName());
+		response.setMobileNumber(userEntity.getMobileNumber());
 		return response;
 	}
 
@@ -376,7 +395,7 @@ public class JobServiceImpl implements JobService {
 			RecruiterActionsOnJobApplicationRequest recruiterActionsOnJobApplicationRequest) {
 
 		CommonServiceResponse response = new CommonServiceResponse();
-		if(Objects.isNull(recruiterActionsOnJobApplicationRequest.getApplicationAccepted())
+		if (Objects.isNull(recruiterActionsOnJobApplicationRequest.getApplicationAccepted())
 				|| !recruiterActionsOnJobApplicationRequest.validApplicationAcceptedField()) {
 			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(),
 					ErrorCodes.INVALID_INPUT_PARAMETER.getDescription(), "applicationAccepted",
@@ -387,7 +406,7 @@ public class JobServiceImpl implements JobService {
 		Optional<JobApplicationHistoryEntity> jobApplicationHistoryOpt = jobApplicationHistoryRepo
 				.findByJobIdAndJobSeekerId(recruiterActionsOnJobApplicationRequest.getJobId(),
 						recruiterActionsOnJobApplicationRequest.getJobSeekerId());
-		
+
 		if (jobApplicationHistoryOpt.isPresent()) {
 			JobApplicationHistoryEntity jobApplicationHistory = jobApplicationHistoryOpt.get();
 			jobApplicationHistory

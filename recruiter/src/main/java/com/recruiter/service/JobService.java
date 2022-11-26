@@ -21,11 +21,13 @@ public interface JobService {
 
 	public JobSearchResponse getAllJobs();
 	
-	public RecruiterDetailsResponse getRecruiterDetails(Integer companyId);
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByLoginId(String loginId);
 	
 	public RecruiterJobDetailsResponse getAllJobsPostedByARecruiter(String loginId);
 	
 	public JobSeekerDetailsResponse getAllJobSeekersAppliedForAJob(BigInteger jobId);
 	
 	public CommonServiceResponse acceptOrRejectCandidateJobApplication(RecruiterActionsOnJobApplicationRequest recruiterActionsOnJobApplicationRequest);
+	
+	public RecruiterDetailsResponse getRecruiterBasicDetailsByCompanyId(Integer companyId);
 }
