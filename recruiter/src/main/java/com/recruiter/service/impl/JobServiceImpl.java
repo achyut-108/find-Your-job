@@ -381,6 +381,7 @@ public class JobServiceImpl implements JobService {
 			jsd.setFirstName(e.getFirstName());
 			jsd.setLastName(e.getLastName());
 			jsd.setMobileNumber(e.getMobileNumber());
+			jsd.setJobSeekerId(e.getUserId());
 			return jsd;
 		}).collect(Collectors.toList());
 

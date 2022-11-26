@@ -1,11 +1,9 @@
 package com.recruiter.domain.job;
 
 import java.io.Serializable;
-import java.util.List;
+import java.math.BigInteger;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.recruiter.common.CommonServiceResponse;
-import com.recruiter.entity.CompanyJobsAndDetailsEntity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +18,14 @@ public class JobSeekerDetails implements Serializable {
 	private String mobileNumber;
 	private String firstName;
 	private String lastName;
+	private BigInteger jobSeekerId;
+	
+	public BigInteger getJobSeekerId() {
+		return jobSeekerId;
+	}
+	public void setJobSeekerId(BigInteger jobSeekerId) {
+		this.jobSeekerId = jobSeekerId;
+	}
 	public String getEmail() {
 		return email;
 	}
