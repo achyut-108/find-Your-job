@@ -1,6 +1,5 @@
 package com.jobseeker.service.impl;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +24,8 @@ import com.jobseeker.domain.resume.EducationDetailsResponse;
 import com.jobseeker.domain.resume.EmploymentHistoryEditRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryRequest;
 import com.jobseeker.domain.resume.EmploymentHistoryResponse;
+import com.jobseeker.domain.resume.JobApplicationStatusRequest;
+import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.domain.resume.MainSkillsEditRequest;
 import com.jobseeker.domain.resume.MainSkillsRequest;
 import com.jobseeker.domain.resume.MainSkillsResponse;
@@ -513,5 +514,4 @@ public class ResumeServiceImpl implements ResumeService {
 
 		return commonServiceResponse;
 	}
-
 }

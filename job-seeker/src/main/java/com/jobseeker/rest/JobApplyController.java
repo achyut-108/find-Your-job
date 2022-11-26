@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
+import com.jobseeker.domain.resume.JobApplicationStatusRequest;
+import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.service.JobApplyService;
 
 @RestController
@@ -37,5 +39,11 @@ public class JobApplyController {
 	public JobsAppliedResponse jobsApplied(@PathVariable("loginId") String loginId) {
 		log.info("request : {}", loginId);
 		return jobApplyService.jobsApplied(loginId);
+	}
+	
+	@PostMapping(value = "/job/jobApplicationsStatus/get/", produces = "application/json")
+	public JobApplicationStatusResponse getjobApplicationStatus(@Valid @RequestBody JobApplicationStatusRequest jobApplicationStatusRequest) {
+		log.info("request : {}", jobApplicationStatusRequest);
+		return jobApplyService.getJobApplicationStatus(jobApplicationStatusRequest);
 	}
 }

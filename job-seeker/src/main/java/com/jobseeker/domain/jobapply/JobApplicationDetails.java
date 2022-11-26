@@ -25,6 +25,15 @@ public class JobApplicationDetails implements Serializable {
 	private Integer jobTypeId;
 	private String jobType;
 	private String active;
+	private BigInteger jobApplicationId;
+
+	public BigInteger getJobApplicationId() {
+		return jobApplicationId;
+	}
+
+	public void setJobApplicationId(BigInteger jobApplicationId) {
+		this.jobApplicationId = jobApplicationId;
+	}
 
 	public BigInteger getJobId() {
 		return jobId;

@@ -17,4 +17,12 @@ public class InstitutionMasterResponse extends CommonServiceResponse implements 
 	public static final long serialVersionUID = 1L;
 	
 	private List<InstitutionMasterEntity> institutionDetails;
+
+	public List<InstitutionMasterEntity> getInstitutionDetails() {
+		return institutionDetails;
+	}
+
+	public void setInstitutionDetails(List<InstitutionMasterEntity> institutionDetails) {
+		this.institutionDetails = institutionDetails;
+	}
 }

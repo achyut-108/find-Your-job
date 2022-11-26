@@ -17,4 +17,12 @@ public class JobTypeResponse extends CommonServiceResponse implements Serializab
 	public static final long serialVersionUID = 1L;
 	
 	private List<JobTypeMasterEntity> jobTypeDetails;
+
+	public List<JobTypeMasterEntity> getJobTypeDetails() {
+		return jobTypeDetails;
+	}
+
+	public void setJobTypeDetails(List<JobTypeMasterEntity> jobTypeDetails) {
+		this.jobTypeDetails = jobTypeDetails;
+	}
 }

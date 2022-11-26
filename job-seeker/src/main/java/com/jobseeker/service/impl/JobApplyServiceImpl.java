@@ -17,6 +17,8 @@ import com.jobseeker.domain.jobapply.JobApplicationDetails;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
+import com.jobseeker.domain.resume.JobApplicationStatusRequest;
+import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.entity.CompanyJobsEntity;
 import com.jobseeker.entity.JobApplicationHistoryEntity;
 import com.jobseeker.entity.UserEntity;
@@ -43,8 +45,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 	private CompanyJobsAndDetailsRepository companyJobsAndDetailsRepository;
 	@Autowired
 	private JobApplicationHistoryRepo jobApplicationHistoryRepo;
-	
-	
+
 	@Override
 	public JobApplyResponse applyToAJob(JobApplyRequest jobApplyRequest) {
 		JobApplyResponse jobApplyResponse = new JobApplyResponse();
@@ -54,29 +55,31 @@ public class JobApplyServiceImpl implements JobApplyService {
 		if (Objects.isNull(userEntity)) {
 			jobApplyResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", jobApplyRequest.getLoginId()));
+			jobApplyResponse.setSuccess(BusinessConstants.FALSE);
 			return jobApplyResponse;
 		}
 
-		Optional<CompanyJobsEntity> companyJobOpt = companyJobsRepository
-				.findById(jobApplyRequest.getJobId());
+		Optional<CompanyJobsEntity> companyJobOpt = companyJobsRepository.findById(jobApplyRequest.getJobId());
 
-		if(!companyJobOpt.isPresent() || !companyJobOpt.get().getActive().equalsIgnoreCase(BusinessConstants.ACTIVE)) {
-			
+		if (!companyJobOpt.isPresent() || !companyJobOpt.get().getActive().equalsIgnoreCase(BusinessConstants.ACTIVE)) {
+
 			jobApplyResponse.addValidationError(new ValidationError(ErrorCodes.JOB_DOES_NOT_EXIST.getCode(),
 					ErrorCodes.JOB_DOES_NOT_EXIST.getDescription(), "jobId", jobApplyRequest.getJobId()));
+			jobApplyResponse.setSuccess(BusinessConstants.FALSE);
 			return jobApplyResponse;
-			
+
 		}
-		
-		Optional<JobApplicationHistoryEntity> jobApplicationhistOpt =  
-				jobApplicationHistoryRepo.findByjobIdAndJobSeekerId(jobApplyRequest.getJobId(),userEntity.getUserId());
-		
-		if(jobApplicationhistOpt.isPresent()) {
+
+		Optional<JobApplicationHistoryEntity> jobApplicationhistOpt = jobApplicationHistoryRepo
+				.findByjobIdAndJobSeekerId(jobApplyRequest.getJobId(), userEntity.getUserId());
+
+		if (jobApplicationhistOpt.isPresent()) {
 			jobApplyResponse.addValidationError(new ValidationError(ErrorCodes.ALREADY_APPLIED_TO_JOB.getCode(),
 					ErrorCodes.ALREADY_APPLIED_TO_JOB.getDescription(), "jobId", jobApplyRequest.getJobId()));
+			jobApplyResponse.setSuccess(BusinessConstants.FALSE);
 			return jobApplyResponse;
-		}	
-		
+		}
+
 		CompanyJobsEntity companyJobsEntity = companyJobOpt.get();
 		JobApplicationHistoryEntity jobApplicationHistoryEntity = new JobApplicationHistoryEntity();
 		jobApplicationHistoryEntity.setActive(BusinessConstants.ACTIVE);
@@ -93,21 +96,19 @@ public class JobApplyServiceImpl implements JobApplyService {
 
 	@Override
 	public JobsAppliedResponse jobsApplied(String loginId) {
-		
+
 		JobsAppliedResponse jobAppliedResponse = new JobsAppliedResponse();
-		UserEntity userEntity = userRepository.findByLoginIdAndActive(loginId,
-				BusinessConstants.ACTIVE);
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(loginId, BusinessConstants.ACTIVE);
 
 		if (Objects.isNull(userEntity)) {
 			jobAppliedResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", loginId));
 			return jobAppliedResponse;
 		}
-		
-		List<Object[]> jobAppliedResultSet = 
-				jobApplicationHistoryRepo.jobsAppliedByAjobSeeker(userEntity.getUserId());
-		List<JobApplicationDetails> jobsApplied = new ArrayList();
-		
+
+		List<Object[]> jobAppliedResultSet = jobApplicationHistoryRepo.jobsAppliedByAjobSeeker(userEntity.getUserId());
+		List<JobApplicationDetails> jobsApplied = new ArrayList<>();
+
 		for (Object[] obj : jobAppliedResultSet) {
 			JobApplicationDetails jobApplicationDetails = new JobApplicationDetails();
 			jobApplicationDetails
@@ -122,13 +123,52 @@ public class JobApplyServiceImpl implements JobApplyService {
 			jobApplicationDetails.setCompanyDescription(obj[6] == null ? null : (String) obj[6]);
 			jobApplicationDetails.setAppliedDate(obj[7] == null ? null : (Date) obj[7]);
 			jobApplicationDetails.setActive(obj[8] == null ? null : (String) obj[8]);
-			
+			jobApplicationDetails
+					.setJobApplicationId(obj[9] == null ? null : BigInteger.valueOf((Long.valueOf(obj[9].toString()))));
+
 			jobsApplied.add(jobApplicationDetails);
 
 		}
-		
+
 		jobAppliedResponse.setJobsApplied(jobsApplied);
 		return jobAppliedResponse;
 	}
-	
+
+	@Override
+	public JobApplicationStatusResponse getJobApplicationStatus(
+			JobApplicationStatusRequest jobApplicationStatusRequest) {
+		JobApplicationStatusResponse jobApplicationStatusResponse = new JobApplicationStatusResponse();
+
+		Optional<JobApplicationHistoryEntity> jobApplicationhistoryOpt = jobApplicationHistoryRepo
+				.findById(jobApplicationStatusRequest.getJobApplicationId());
+
+		if (!jobApplicationhistoryOpt.isPresent()) {
+			jobApplicationStatusResponse
+					.addValidationError(new ValidationError(ErrorCodes.JOB_APPLICATION_DOES_NOT_EXIST.getCode(),
+							ErrorCodes.JOB_APPLICATION_DOES_NOT_EXIST.getDescription(), "jobApplicationId",
+							jobApplicationStatusRequest.getJobApplicationId()));
+			jobApplicationStatusResponse.setSuccess(BusinessConstants.FALSE);
+			return jobApplicationStatusResponse;
+
+		}
+
+		JobApplicationHistoryEntity jobApplicationHistoryEntity = jobApplicationhistoryOpt.get();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(jobApplicationStatusRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+		if (Objects.isNull(userEntity)
+				|| jobApplicationHistoryEntity.getJobSeekerId().compareTo(userEntity.getUserId()) != 0) {
+			jobApplicationStatusResponse.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", jobApplicationStatusRequest.getLoginId()));
+			jobApplicationStatusResponse.setSuccess(BusinessConstants.FALSE);
+			return jobApplicationStatusResponse;
+		}
+
+		jobApplicationStatusResponse.setApplicationAccepted(jobApplicationHistoryEntity.getApplicataionAccepted());
+		jobApplicationStatusResponse.setApplicationViewed(jobApplicationHistoryEntity.getApplicationViewed());
+		jobApplicationStatusResponse.setSuccess(BusinessConstants.TRUE);
+		jobApplicationStatusResponse.setMessage("Successfully fetched the job application status");
+
+		return jobApplicationStatusResponse;
+	}
+
 }
