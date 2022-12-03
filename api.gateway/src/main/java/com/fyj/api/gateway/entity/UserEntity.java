@@ -98,10 +98,4 @@ public class UserEntity {
 	public void setActive(String active) {
 		this.active = active;
 	}
-	@Override
-	public String toString() {
-		return "UserEntity [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
-				+ email + ", userTypeId=" + userTypeId + ", password=" + password + ", loginAttempt=" + loginAttempt
-				+ ", mobileNumber=" + mobileNumber + ", loginId=" + loginId + ", active=" + active + "]";
-	}
 }

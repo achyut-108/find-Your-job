@@ -26,5 +26,28 @@ public class CompanyMasterEntity {
 	private String companyDescription;
 	@Column(name = "user_id")
 	private BigInteger userId;
-
+	public Integer getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyDescription() {
+		return companyDescription;
+	}
+	public void setCompanyDescription(String companyDescription) {
+		this.companyDescription = companyDescription;
+	}
+	public BigInteger getUserId() {
+		return userId;
+	}
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
+	}
 }

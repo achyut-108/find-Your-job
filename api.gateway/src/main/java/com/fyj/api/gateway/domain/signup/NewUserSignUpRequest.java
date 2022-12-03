@@ -37,4 +37,58 @@ public class NewUserSignUpRequest extends CommonServiceRequest implements Serial
 	private Integer userType;
 	private String companyName;
 	private String companyDescription;
+	public String getLoginId() {
+		return loginId;
+	}
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Integer getUserType() {
+		return userType;
+	}
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyDescription() {
+		return companyDescription;
+	}
+	public void setCompanyDescription(String companyDescription) {
+		this.companyDescription = companyDescription;
+	}
 }
