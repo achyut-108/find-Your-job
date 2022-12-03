@@ -7,4 +7,6 @@ import com.fyj.api.gateway.entity.DegreeMasterEntity;
 
 @Repository
 public interface DegreeMasterRepository extends CrudRepository<DegreeMasterEntity, Integer>{
+	
+	DegreeMasterEntity findByDegree(String degree);
 }

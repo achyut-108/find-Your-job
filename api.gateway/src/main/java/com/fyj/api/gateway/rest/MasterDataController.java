@@ -55,4 +55,10 @@ public class MasterDataController {
 		return masterDataService.addDegree(degreeMasterAddRequest);
 	}
 	
+	@PostMapping(value = "/admin/editDegree/post", produces = "application/json")
+	public CommonServiceResponse editDegree(@Valid @RequestBody DegreeMasterAddRequest degreeMasterAddRequest) {
+		log.info("request : {}", degreeMasterAddRequest.toString());
+		return masterDataService.editDegree(degreeMasterAddRequest);
+	}
+	
 }

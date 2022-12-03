@@ -92,4 +92,38 @@ public class MasterDataServiceImpl implements MasterDataService {
 
 		return response;
 	}
+
+	@Override
+	public CommonServiceResponse editDegree(DegreeMasterAddRequest degreeMasterAddRequest) {
+		CommonServiceResponse response = new CommonServiceResponse();
+
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !degreeMasterAddRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", degreeMasterAddRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully edited the degree details");
+
+		DegreeMasterEntity degreeMasterEntity = degreeMasterRepository.findByDegree(degreeMasterAddRequest.getDegree());
+
+		if (degreeMasterEntity != null) {
+			degreeMasterEntity.setDegreeDescription(degreeMasterAddRequest.getDegreeDescription()!=null 
+					? degreeMasterAddRequest.getDegreeDescription() : degreeMasterEntity.getDegreeDescription());
+			degreeMasterRepository.save(degreeMasterEntity);
+		}else {
+			response.setSuccess(BusinessConstants.FALSE);
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), 
+					null, null, degreeMasterEntity));
+			response.setMessage("Successfully edited the degree details");
+		}
+
+		return response;
+	}
 }

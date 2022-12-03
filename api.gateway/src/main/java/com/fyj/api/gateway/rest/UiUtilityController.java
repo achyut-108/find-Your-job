@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fyj.api.gateway.domain.master.DegreeMasterResponse;
 import com.fyj.api.gateway.domain.master.InstitutionMasterResponse;
 import com.fyj.api.gateway.domain.master.JobTypeResponse;
+import com.fyj.api.gateway.domain.signup.AllUserBasicProfileDetails;
 import com.fyj.api.gateway.service.UiUtilityService;
 
 @RestController
@@ -27,14 +28,19 @@ public class UiUtilityController {
 	public DegreeMasterResponse getAllDegreeDetails() {
 		return uiUtilityService.getAllDegreeDetails();
 	}
-	
+
 	@GetMapping(value = "/ui/getAllInstitution/get", produces = "application/json")
 	public InstitutionMasterResponse getAllInstitutionDetails() {
 		return uiUtilityService.getAllInstitutionDetails();
 	}
-	
+
 	@GetMapping(value = "/ui/getJobTypes/get", produces = "application/json")
 	public JobTypeResponse getAllJobTypeDetails() {
 		return uiUtilityService.getAllJobTypeDetails();
+	}
+	
+	@GetMapping(value = "/ui/getAllUsers/get", produces = "application/json")
+	public AllUserBasicProfileDetails getAllUsers() {
+		return uiUtilityService.getAllUserBasicDetails();
 	}
 }
