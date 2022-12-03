@@ -27,6 +27,7 @@ import com.recruiter.domain.job.JobSearchResponse;
 import com.recruiter.domain.job.JobSeekerDetails;
 import com.recruiter.domain.job.JobSeekerDetailsResponse;
 import com.recruiter.domain.job.RecruiterActionsOnJobApplicationRequest;
+import com.recruiter.domain.recruiterdetails.RecruiterDetailsEditRequest;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.entity.CompanyJobsAndDetailsEntity;
@@ -446,4 +447,81 @@ public class JobServiceImpl implements JobService {
 		response.setSuccess(BusinessConstants.FALSE);
 		return response;
 	}
+
+	@Override
+	public CommonServiceResponse editRecruiterBasicDetails(RecruiterDetailsEditRequest recruiterDetailsEditRequest) {
+
+		CommonServiceResponse response = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(recruiterDetailsEditRequest.getLoginId(),
+				BusinessConstants.ACTIVE);
+		if (Objects.isNull(userEntity)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", recruiterDetailsEditRequest.getLoginId()));
+			return response;
+		}
+
+		userEntity.setEmail(
+				userEntity.getEmail() != null ? recruiterDetailsEditRequest.getEmail() : userEntity.getEmail());
+		userEntity.setFirstName(userEntity.getFirstName() != null ? recruiterDetailsEditRequest.getFirstName()
+				: userEntity.getFirstName());
+		userEntity.setLastName(userEntity.getLastName() != null ? recruiterDetailsEditRequest.getLastName()
+				: userEntity.getLastName());
+		userEntity.setMobileNumber(userEntity.getMobileNumber() != null ? recruiterDetailsEditRequest.getMobileNumber()
+				: userEntity.getMobileNumber());
+
+		userRepository.save(userEntity);
+
+		Optional<UserDetailsEntity> userDetailsEntityOpt = userDetailsRepository.findById(userEntity.getUserId());
+		UserDetailsEntity userDetailsEntity = null;
+		if (userDetailsEntityOpt.isPresent()) {
+			userDetailsEntity = userDetailsEntityOpt.get();
+			userDetailsEntity.setAddress(
+					recruiterDetailsEditRequest.getAddress() != null ? recruiterDetailsEditRequest.getAddress()
+							: userDetailsEntity.getAddress());
+			userDetailsEntity.setDateOfBirth(
+					recruiterDetailsEditRequest.getDateOfBirth() != null ? recruiterDetailsEditRequest.getDateOfBirth()
+							: userDetailsEntity.getDateOfBirth());
+			userDetailsEntity
+					.setGender(recruiterDetailsEditRequest.getGender() != null ? recruiterDetailsEditRequest.getGender()
+							: userDetailsEntity.getGender());
+			userDetailsEntity.setHomeTown(
+					recruiterDetailsEditRequest.getHomeTown() != null ? recruiterDetailsEditRequest.getHomeTown()
+							: userDetailsEntity.getHomeTown());
+			userDetailsEntity.setMartialStatus(recruiterDetailsEditRequest.getMartialStatus() != null
+					? recruiterDetailsEditRequest.getMartialStatus()
+					: userDetailsEntity.getMartialStatus());
+			userDetailsEntity.setPinCode(
+					recruiterDetailsEditRequest.getPinCode() != null ? recruiterDetailsEditRequest.getPinCode()
+							: userDetailsEntity.getPinCode());
+			userDetailsEntity.setProfileSummary(recruiterDetailsEditRequest.getProfileSummary() != null
+					? recruiterDetailsEditRequest.getProfileSummary()
+					: userDetailsEntity.getProfileSummary());
+		} else {
+			userDetailsEntity = createUserDetailsEntity(recruiterDetailsEditRequest);
+		}
+
+		if (userDetailsEntity != null) {
+			userDetailsRepository.save(userDetailsEntity);
+		}
+		response.setSuccess(BusinessConstants.TRUE);
+		return response;
+	}
+
+	private UserDetailsEntity createUserDetailsEntity(RecruiterDetailsEditRequest recruiterDetailsEditRequest) {
+
+		UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
+
+		userDetailsEntity.setAddress(recruiterDetailsEditRequest.getAddress());
+		userDetailsEntity.setDateOfBirth(recruiterDetailsEditRequest.getDateOfBirth());
+		userDetailsEntity.setGender(recruiterDetailsEditRequest.getGender());
+		userDetailsEntity.setHomeTown(recruiterDetailsEditRequest.getHomeTown());
+		userDetailsEntity.setMartialStatus(recruiterDetailsEditRequest.getMartialStatus());
+		userDetailsEntity.setPinCode(recruiterDetailsEditRequest.getPinCode());
+		userDetailsEntity.setProfileSummary(recruiterDetailsEditRequest.getProfileSummary());
+		userDetailsEntity.setUserId(recruiterDetailsEditRequest.getUserId());
+
+		return userDetailsEntity;
+
+	}
+
 }

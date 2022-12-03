@@ -9,6 +9,7 @@ import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
 import com.recruiter.domain.job.JobSeekerDetailsResponse;
 import com.recruiter.domain.job.RecruiterActionsOnJobApplicationRequest;
+import com.recruiter.domain.recruiterdetails.RecruiterDetailsEditRequest;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 
@@ -30,4 +31,7 @@ public interface JobService {
 	public CommonServiceResponse acceptOrRejectCandidateJobApplication(RecruiterActionsOnJobApplicationRequest recruiterActionsOnJobApplicationRequest);
 	
 	public RecruiterDetailsResponse getRecruiterBasicDetailsByCompanyId(Integer companyId);
+	
+	public CommonServiceResponse editRecruiterBasicDetails(RecruiterDetailsEditRequest recruiterDetailsEditRequest);
+	
 }

@@ -22,6 +22,7 @@ import com.recruiter.domain.job.JobDetailsResponse;
 import com.recruiter.domain.job.JobSearchResponse;
 import com.recruiter.domain.job.JobSeekerDetailsResponse;
 import com.recruiter.domain.job.RecruiterActionsOnJobApplicationRequest;
+import com.recruiter.domain.recruiterdetails.RecruiterDetailsEditRequest;
 import com.recruiter.domain.recruiterdetails.RecruiterDetailsResponse;
 import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.service.JobService;
@@ -82,6 +83,11 @@ public class JobController {
 	@PostMapping(value = "/job/recruiterJobDetails/acceptOrRejectJobApplication/", produces = "application/json")
 	public CommonServiceResponse acceptOrRejectCandidateJobApplication(@Valid @RequestBody RecruiterActionsOnJobApplicationRequest recruiterActions) {
 		return jobService.acceptOrRejectCandidateJobApplication(recruiterActions);
+	}
+	
+	@PostMapping(value = "/job/recruiterBasicDetails/edit/", produces = "application/json")
+	public CommonServiceResponse getRecruiterBasicDetailsByLoginId(@Valid @RequestBody RecruiterDetailsEditRequest recruiterDetailsEditRequest) {
+		return jobService.editRecruiterBasicDetails(recruiterDetailsEditRequest);
 	}
 	
 }
