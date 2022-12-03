@@ -14,7 +14,7 @@ public interface UserEducationHistoryRepository extends CrudRepository<UserEduca
 	
 	@Query(value = "select major,start_date,end_Date,is_highest,degree,\r\n"
 			+ "degree_description,institution_name,address,pin_code,\r\n"
-			+ "location from user_education_history ueh, m_degree dm, m_institution im\r\n"
+			+ "location, user_education_id from user_education_history ueh, m_degree dm, m_institution im\r\n"
 			+ "where ueh.degree_id = dm.degree_id and ueh.user_id = ?1 \r\n"
 			+ "and ueh.institution_id = im.institution_id;", nativeQuery = true)
 	List<Object[]> getUserEducationDetails(BigInteger userId);

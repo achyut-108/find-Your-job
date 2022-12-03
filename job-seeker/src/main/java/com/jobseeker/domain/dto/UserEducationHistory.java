@@ -18,6 +18,15 @@ public class UserEducationHistory implements Serializable {
 	private String address;
 	private String pinCode;
 	private String location;
+	private Integer userEducationHistoryId;
+
+	public Integer getUserEducationHistoryId() {
+		return userEducationHistoryId;
+	}
+
+	public void setUserEducationHistoryId(Integer userEducationHistoryId) {
+		this.userEducationHistoryId = userEducationHistoryId;
+	}
 
 	public String getFirstName() {
 		return firstName;

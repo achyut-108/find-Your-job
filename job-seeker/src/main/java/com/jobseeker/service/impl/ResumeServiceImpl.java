@@ -226,6 +226,7 @@ public class ResumeServiceImpl implements ResumeService {
 				userEducationHistory.setAddress(obj[7] == null ? null : (String) obj[7]);
 				userEducationHistory.setPinCode(obj[8] == null ? null : (String) obj[8]);
 				userEducationHistory.setLocation(obj[9] == null ? null : (String) obj[9]);
+				userEducationHistory.setUserEducationHistoryId(obj[10] == null ? null : (Integer) obj[10]);
 				return userEducationHistory;
 
 			}).collect(Collectors.toList());
@@ -423,7 +424,7 @@ public class ResumeServiceImpl implements ResumeService {
 					educationDetailsEditRequest.getStartDate() != null ? educationDetailsEditRequest.getStartDate()
 							: userEducationDetailsDb.getStartDate());
 			userEducationHistoryRepository.save(userEducationDetailsDb);
-			commonServiceResponse.setMessage("education details not updated");
+			commonServiceResponse.setMessage("education details updated");
 			commonServiceResponse.setSuccess(BusinessConstants.TRUE);
 		}
 

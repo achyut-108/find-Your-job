@@ -3,6 +3,8 @@ package com.jobseeker.domain.resume;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.jobseeker.common.CommonServiceRequest;
 
@@ -25,6 +27,8 @@ public class EducationDetailsEditRequest extends CommonServiceRequest implements
 	private String major;
 	private Date startDate;
 	private Date endDate;
+	@Size(min = 1, message = "can not be greater than 1")
+	@Size(max = 1, message = "can be Y or N")
 	private String isHighest;
 	
 	public Integer getUserEducationId() {
