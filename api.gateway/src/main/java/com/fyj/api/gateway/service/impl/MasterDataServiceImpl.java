@@ -2,6 +2,8 @@ package com.fyj.api.gateway.service.impl;
 
 import java.util.Objects;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +12,9 @@ import com.fyj.api.gateway.common.CommonServiceResponse;
 import com.fyj.api.gateway.common.ErrorCodes;
 import com.fyj.api.gateway.common.ValidationError;
 import com.fyj.api.gateway.domain.master.DegreeMasterAddRequest;
+import com.fyj.api.gateway.domain.master.InstitutionMasterAddRequest;
 import com.fyj.api.gateway.entity.DegreeMasterEntity;
+import com.fyj.api.gateway.entity.InstitutionMasterEntity;
 import com.fyj.api.gateway.entity.UserEntity;
 import com.fyj.api.gateway.repo.DegreeMasterRepository;
 import com.fyj.api.gateway.repo.InstitutionMasterRepository;
@@ -122,6 +126,76 @@ public class MasterDataServiceImpl implements MasterDataService {
 			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), 
 					null, null, degreeMasterEntity));
 			response.setMessage("Successfully edited the degree details");
+		}
+
+		return response;
+	}
+	
+	public CommonServiceResponse addInstitution(@Valid InstitutionMasterAddRequest institutionMasterAddRequest) {
+		CommonServiceResponse response = new CommonServiceResponse();
+
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !institutionMasterAddRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", institutionMasterAddRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully edited the degree details");
+		
+		InstitutionMasterEntity institutionMasterEntity = new InstitutionMasterEntity();
+		institutionMasterEntity.setAddress(institutionMasterAddRequest.getAddress());
+		institutionMasterEntity.setInstitutionName(institutionMasterAddRequest.getInstitutionName());
+		institutionMasterEntity.setLocation(institutionMasterAddRequest.getLocation());
+		institutionMasterEntity.setPinCode(institutionMasterAddRequest.getPinCode());
+		
+		institutionMasterRepository.save(institutionMasterEntity);
+
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully added the instituttion details");
+
+		return response;
+		
+	}
+
+	public CommonServiceResponse editInstitution(@Valid InstitutionMasterAddRequest institutionMasterAddRequest) {
+		CommonServiceResponse response = new CommonServiceResponse();
+
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !institutionMasterAddRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", institutionMasterAddRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully edited the degree details");
+
+		InstitutionMasterEntity institutionMasterEntity = institutionMasterRepository.
+				findByInstitutionName(institutionMasterAddRequest.getInstitutionName());
+
+		if (institutionMasterEntity != null) {
+			institutionMasterEntity.setAddress(institutionMasterAddRequest.getAddress()!=null 
+					? institutionMasterAddRequest.getAddress() : institutionMasterEntity.getAddress());
+			institutionMasterEntity.setLocation(institutionMasterAddRequest.getLocation()!=null 
+					? institutionMasterAddRequest.getLocation() : institutionMasterEntity.getLocation());
+			institutionMasterEntity.setPinCode(institutionMasterAddRequest.getPinCode()!=null
+					? institutionMasterAddRequest.getPinCode() : institutionMasterEntity.getPinCode());
+			institutionMasterRepository.save(institutionMasterEntity);
+		}else {
+			response.setSuccess(BusinessConstants.FALSE);
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), 
+					null, null, institutionMasterEntity));
+			response.setMessage("Successfully edited the institution details");
 		}
 
 		return response;

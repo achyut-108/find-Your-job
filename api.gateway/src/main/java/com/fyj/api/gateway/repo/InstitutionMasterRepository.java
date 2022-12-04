@@ -7,4 +7,6 @@ import com.fyj.api.gateway.entity.InstitutionMasterEntity;
 
 @Repository
 public interface InstitutionMasterRepository extends CrudRepository<InstitutionMasterEntity, Integer>{
+	
+	public InstitutionMasterEntity findByInstitutionName(String institutionName);
 }

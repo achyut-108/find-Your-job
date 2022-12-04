@@ -17,6 +17,7 @@ import com.fyj.api.gateway.domain.login.LoginRequest;
 import com.fyj.api.gateway.domain.login.LoginResponse;
 import com.fyj.api.gateway.domain.master.DegreeMasterAddRequest;
 import com.fyj.api.gateway.domain.master.DegreeMasterResponse;
+import com.fyj.api.gateway.domain.master.InstitutionMasterAddRequest;
 import com.fyj.api.gateway.domain.master.InstitutionMasterResponse;
 import com.fyj.api.gateway.domain.master.JobTypeResponse;
 import com.fyj.api.gateway.service.MasterDataService;
@@ -59,6 +60,18 @@ public class MasterDataController {
 	public CommonServiceResponse editDegree(@Valid @RequestBody DegreeMasterAddRequest degreeMasterAddRequest) {
 		log.info("request : {}", degreeMasterAddRequest.toString());
 		return masterDataService.editDegree(degreeMasterAddRequest);
+	}
+	
+	@PostMapping(value = "/admin/addInstitution/post", produces = "application/json")
+	public CommonServiceResponse addInstitution(@Valid @RequestBody InstitutionMasterAddRequest institutionMasterAddRequest) {
+		log.info("request : {}", institutionMasterAddRequest.toString());
+		return masterDataService.addInstitution(institutionMasterAddRequest);
+	}
+	
+	@PostMapping(value = "/admin/editInstitution/post", produces = "application/json")
+	public CommonServiceResponse editInstitution(@Valid @RequestBody InstitutionMasterAddRequest institutionMasterAddRequest) {
+		log.info("request : {}", institutionMasterAddRequest.toString());
+		return masterDataService.editInstitution(institutionMasterAddRequest);
 	}
 	
 }
