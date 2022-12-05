@@ -20,7 +20,7 @@ import com.fyj.domain.resume.MainSkillsResponse;
 import com.fyj.service.ResumeService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class ResumeController {
 

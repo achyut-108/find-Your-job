@@ -39,7 +39,7 @@ import com.jobseeker.entity.ResumeEntity;
 import com.jobseeker.service.ResumeService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class ResumeController {
 

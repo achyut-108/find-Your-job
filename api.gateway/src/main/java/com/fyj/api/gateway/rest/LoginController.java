@@ -17,7 +17,7 @@ import com.fyj.api.gateway.domain.login.LoginResponse;
 import com.fyj.api.gateway.service.LoginService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class LoginController {
 

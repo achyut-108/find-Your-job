@@ -18,7 +18,7 @@ import com.fyj.domain.job.JobSearchResponse;
 import com.fyj.service.JobService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class JobController {
 

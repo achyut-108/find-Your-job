@@ -14,7 +14,7 @@ import com.recruiter.domain.master.JobTypeResponse;
 import com.recruiter.service.UiUtilityService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class UiUtilityController {
 

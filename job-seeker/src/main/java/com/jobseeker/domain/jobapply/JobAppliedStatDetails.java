@@ -1,43 +1,45 @@
-package com.jobseeker.entity;
+package com.jobseeker.domain.jobapply;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-@Entity
-@Table(name = "company_jobs", schema = "job_search")
-public class CompanyJobsEntity {
+@JsonAutoDetect
+@EqualsAndHashCode(callSuper = false)
+public class JobAppliedStatDetails implements Serializable {
+	public static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "job_id")
 	private BigInteger jobId;
-	@Column(name = "company_id")
+	private Integer countOfJobSeekers;
 	private Integer companyId;
-	@Column(name = "job_title")
 	private String jobTitle;
-	@Column(name = "job_description")
 	private String jobDescription;
-	@Column(name = "job_type_id")
 	private Integer jobTypeId;
-	@Column(name = "active")
-	private String active;
-	@Column(name = "posted_by")
-	private BigInteger postedBy;
+	private Integer jobPostedBy;
+	private String jobType;
 	
+	public String getJobType() {
+		return jobType;
+	}
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
+	}
 	public BigInteger getJobId() {
 		return jobId;
 	}
 	public void setJobId(BigInteger jobId) {
 		this.jobId = jobId;
+	}
+	public Integer getCountOfJobSeekers() {
+		return countOfJobSeekers;
+	}
+	public void setCountOfJobSeekers(Integer countOfJobSeekers) {
+		this.countOfJobSeekers = countOfJobSeekers;
 	}
 	public Integer getCompanyId() {
 		return companyId;
@@ -63,10 +65,10 @@ public class CompanyJobsEntity {
 	public void setJobTypeId(Integer jobTypeId) {
 		this.jobTypeId = jobTypeId;
 	}
-	public String getActive() {
-		return active;
+	public Integer getJobPostedBy() {
+		return jobPostedBy;
 	}
-	public void setActive(String active) {
-		this.active = active;
+	public void setJobPostedBy(Integer jobPostedBy) {
+		this.jobPostedBy = jobPostedBy;
 	}
 }

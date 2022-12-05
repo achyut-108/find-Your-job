@@ -26,5 +26,7 @@ public interface BusinessConstants {
 		return jobTypeMap;
 		
 	}
+	
+	public static final String ADMIN = "admin";
 
 }

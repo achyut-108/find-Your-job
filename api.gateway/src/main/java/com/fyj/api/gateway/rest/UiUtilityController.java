@@ -15,7 +15,7 @@ import com.fyj.api.gateway.domain.signup.AllUserBasicProfileDetails;
 import com.fyj.api.gateway.service.UiUtilityService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class UiUtilityController {
 

@@ -28,7 +28,7 @@ import com.recruiter.domain.recruiterdetails.RecruiterJobDetailsResponse;
 import com.recruiter.service.JobService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class JobController {
 

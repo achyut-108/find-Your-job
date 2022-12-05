@@ -24,7 +24,7 @@ import com.fyj.api.gateway.service.MasterDataService;
 import com.fyj.api.gateway.service.UiUtilityService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class MasterDataController {
 

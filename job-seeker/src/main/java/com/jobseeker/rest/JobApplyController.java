@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobseeker.common.CommonServiceRequest;
+import com.jobseeker.common.CommonServiceResponse;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
@@ -20,7 +22,7 @@ import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.service.JobApplyService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class JobApplyController {
 
@@ -45,5 +47,11 @@ public class JobApplyController {
 	public JobApplicationStatusResponse getjobApplicationStatus(@Valid @RequestBody JobApplicationStatusRequest jobApplicationStatusRequest) {
 		log.info("request : {}", jobApplicationStatusRequest);
 		return jobApplyService.getJobApplicationStatus(jobApplicationStatusRequest);
+	}
+	
+	@PostMapping(value = "/job/jobAppliedStatistics/get/", produces = "application/json")
+	public CommonServiceResponse getJobAppliedStatistics(@Valid @RequestBody CommonServiceRequest commonServiceRequest) {
+		log.info("request : {}", commonServiceRequest);
+		return jobApplyService.getJobAppliedStatistics(commonServiceRequest);
 	}
 }

@@ -7,13 +7,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobseeker.common.BusinessConstants;
+import com.jobseeker.common.CommonServiceRequest;
+import com.jobseeker.common.CommonServiceResponse;
 import com.jobseeker.common.ErrorCodes;
 import com.jobseeker.common.ValidationError;
 import com.jobseeker.domain.jobapply.JobApplicationDetails;
+import com.jobseeker.domain.jobapply.JobAppliedStatDetails;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
@@ -169,6 +174,57 @@ public class JobApplyServiceImpl implements JobApplyService {
 		jobApplicationStatusResponse.setMessage("Successfully fetched the job application status");
 
 		return jobApplicationStatusResponse;
+	}
+
+	@Override
+	public CommonServiceResponse getJobAppliedStatistics(@Valid CommonServiceRequest commonServiceRequest) {
+
+		CommonServiceResponse response = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !commonServiceRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		List<Object[]> jobAppliedStats = jobApplicationHistoryRepo.jobsAppliedStatistics();
+
+		List<JobAppliedStatDetails> jobsAppliedStatDetails = new ArrayList<>();
+
+		for (Object[] obj : jobAppliedStats) {
+			JobAppliedStatDetails jobAppliedStatDetails = new JobAppliedStatDetails();
+			jobAppliedStatDetails.setCountOfJobSeekers(obj[0] == null ? null : (Integer) obj[0]);
+			jobAppliedStatDetails
+					.setJobId(obj[1] == null ? null : BigInteger.valueOf((Long.valueOf(obj[1].toString()))));
+
+			Optional<CompanyJobsEntity> companyJobOpt = companyJobsRepository.findById(jobAppliedStatDetails.getJobId());
+
+			if(companyJobOpt.isPresent()) {
+				CompanyJobsEntity companyJobsEntity = companyJobOpt.get();
+				jobAppliedStatDetails.setCompanyId(companyJobsEntity.getCompanyId());
+				jobAppliedStatDetails.setJobTitle(companyJobsEntity.getJobTitle());
+				jobAppliedStatDetails.setJobDescription(companyJobsEntity.getJobDescription());
+				//jobAppliedStatDetails.setJobPostedBy(companyJobsEntity.getPo);
+			}
+			
+			
+//			
+//			jobAppliedStatDetails.setJobDescription(obj[3] == null ? null : (String) obj[3]);
+//			jobAppliedStatDetails.setJobTypeId(obj[4] == null ? null : (Integer) obj[4]);
+//			jobAppliedStatDetails
+//					.setJobType(BusinessConstants.getJobTypeMap().get(jobAppliedStatDetails.getJobTypeId()));
+//
+//			jobApplicationDetails
+//					.setJobApplicationId(obj[9] == null ? null : BigInteger.valueOf((Long.valueOf(obj[9].toString()))));
+//
+//			jobsApplied.add(jobApplicationDetails);
+
+		}
+		return response;
 	}
 
 }

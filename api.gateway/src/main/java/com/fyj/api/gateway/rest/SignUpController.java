@@ -20,7 +20,7 @@ import com.fyj.api.gateway.domain.signup.UserBasicProfileDetails;
 import com.fyj.api.gateway.service.SignUpService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class SignUpController {
 

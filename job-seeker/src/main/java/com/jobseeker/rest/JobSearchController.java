@@ -19,7 +19,7 @@ import com.jobseeker.domain.jobapply.JobsAppliedResponse;
 import com.jobseeker.service.JobApplyService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 @RequestMapping("/")
 public class JobSearchController {
 
