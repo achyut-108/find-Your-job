@@ -17,11 +17,11 @@ public class JobsAppliedStatisticsResponse extends CommonServiceResponse impleme
 
 	private List<JobAppliedStatDetails> jobsAppliedStatDetailsList;
 
-	public List<JobAppliedStatDetails> getJobsApplied() {
+	public List<JobAppliedStatDetails> getJobsAppliedStatDetailsList() {
 		return jobsAppliedStatDetailsList;
 	}
-
-	public void setJobsApplied(List<JobAppliedStatDetails> jobsAppliedStatDetailsList) {
+	
+	public void setJobsAppliedStatDetailsList(List<JobAppliedStatDetails> jobsAppliedStatDetailsList) {
 		this.jobsAppliedStatDetailsList = jobsAppliedStatDetailsList;
 	}
 

@@ -227,7 +227,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 			jobAppliedStatDetail.setJobAppliedPercentage(percentage);
 		}
 
-		response.setJobsApplied(jobsAppliedStatDetails);
+		response.setJobsAppliedStatDetailsList(jobsAppliedStatDetails);
 		response.setSuccess(BusinessConstants.TRUE);
 		response.setMessage("Successfully fetched the job stat details");
 		return response;
