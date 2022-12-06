@@ -221,7 +221,6 @@ public class JobApplyServiceImpl implements JobApplyService {
 
 		}
 
-		
 		for(JobAppliedStatDetails jobAppliedStatDetail : jobsAppliedStatDetails) {
 			long percentage = (100 / (totalJobsApplied)) * (jobAppliedStatDetail.getCountOfJobSeekers());
 			jobAppliedStatDetail.setJobAppliedPercentage(percentage);

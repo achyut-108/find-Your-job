@@ -64,14 +64,17 @@ public class SignUpServiceImpl implements SignUpService {
 						"companyName", newSignUpRequest.getCompanyName()));
 			}
 
-			companyMasterEntity = new CompanyMasterEntity();
-			companyMasterEntity.setCompanyDescription(newSignUpRequest.getCompanyDescription());
-			companyMasterEntity.setCompanyName(newSignUpRequest.getCompanyName());
-
+			CompanyMasterEntity companyMasterEntityDb = companyMasterRepository
+					.findByCompanyName(newSignUpRequest.getCompanyName());
+			if (Objects.isNull(companyMasterEntityDb)) {
+				companyMasterEntity = new CompanyMasterEntity();
+				companyMasterEntity.setCompanyDescription(newSignUpRequest.getCompanyDescription());
+				companyMasterEntity.setCompanyName(newSignUpRequest.getCompanyName());
+			}
 		}
 
-		if (Objects.isNull(newJoineeSignUpResponse.getValidationErrors()) || 
-				newJoineeSignUpResponse.getValidationErrors().isEmpty()) {
+		if (Objects.isNull(newJoineeSignUpResponse.getValidationErrors())
+				|| newJoineeSignUpResponse.getValidationErrors().isEmpty()) {
 			userEntity.setActive(BusinessConstants.ACTIVE);
 			userEntity = userRepository.save(userEntity);
 
@@ -126,37 +129,38 @@ public class SignUpServiceImpl implements SignUpService {
 
 		return newUserSignUpResponse;
 	}
-	
+
 	@Override
 	public CommonServiceResponse validateUserId(String userId) {
 		UserEntity user = userRepository.findByLoginIdAndActive(userId, BusinessConstants.ACTIVE);
-		
+
 		CommonServiceResponse response = new CommonServiceResponse();
-		
-		if(Objects.nonNull(user)) {
-			response.addValidationError(ErrorCodes.USER_ID_ALREADY_EXIST.getCode(), ErrorCodes.USER_ID_ALREADY_EXIST.getDescription(), "userId", userId);
+
+		if (Objects.nonNull(user)) {
+			response.addValidationError(ErrorCodes.USER_ID_ALREADY_EXIST.getCode(),
+					ErrorCodes.USER_ID_ALREADY_EXIST.getDescription(), "userId", userId);
 			return response;
 		}
 		response.setSuccess(true);
 		return response;
-		
+
 	}
-	
+
 	@Override
 	public CommonServiceResponse validateEmailId(String email) {
 		UserEntity user = userRepository.findByEmail(email);
-		
+
 		CommonServiceResponse response = new CommonServiceResponse();
-		
-		if(Objects.nonNull(user) && user.getEmail().equalsIgnoreCase(email)) {
-			response.addValidationError(ErrorCodes.EMAIL_ID_ALREADY_EXIST.getCode(), 
+
+		if (Objects.nonNull(user) && user.getEmail().equalsIgnoreCase(email)) {
+			response.addValidationError(ErrorCodes.EMAIL_ID_ALREADY_EXIST.getCode(),
 					ErrorCodes.EMAIL_ID_ALREADY_EXIST.getDescription(), "emailId", email);
 			return response;
 		}
-	
+
 		response.setSuccess(true);
 		return response;
-		
+
 	}
-	
-}	
+
+}
