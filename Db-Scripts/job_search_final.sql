@@ -98,7 +98,7 @@ CREATE TABLE `job_application_history` (
   `application_viewed` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`job_application_id`,`job_id`),
   UNIQUE KEY `job_applicaton_id_UNIQUE` (`job_application_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `job_application_history` (
 
 LOCK TABLES `job_application_history` WRITE;
 /*!40000 ALTER TABLE `job_application_history` DISABLE KEYS */;
-INSERT INTO `job_application_history` VALUES (1,1,1,'2022-11-15 16:00:16','Y','Y',NULL);
+INSERT INTO `job_application_history` VALUES (1,1,1,'2022-11-15 16:00:16','Y','Y',NULL),(2,2,1,'2022-11-15 16:00:16','Y','Y',NULL),(3,2,2,'2022-11-15 16:00:16','Y','Y',NULL);
 /*!40000 ALTER TABLE `job_application_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,11 +122,10 @@ CREATE TABLE `m_company` (
   `company_id` int NOT NULL AUTO_INCREMENT,
   `company_name` varchar(150) NOT NULL,
   `company_description` varchar(500) DEFAULT NULL,
-  `user_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
   PRIMARY KEY (`company_id`),
-  UNIQUE KEY `company_name_UNIQUE` (`company_name`),
-  UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `company_name_UNIQUE` (`company_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +134,7 @@ CREATE TABLE `m_company` (
 
 LOCK TABLES `m_company` WRITE;
 /*!40000 ALTER TABLE `m_company` DISABLE KEYS */;
-INSERT INTO `m_company` VALUES (1001,'XYZ PVT LTD','TELECOM SECTOR',2);
+INSERT INTO `m_company` VALUES (1001,'XYZ PVT LTD','TELECOM SECTOR',2),(1002,'J P Morgan','jp morgan',NULL);
 /*!40000 ALTER TABLE `m_company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,7 +151,7 @@ CREATE TABLE `m_degree` (
   `degree_description` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`degree_id`),
   UNIQUE KEY `degree_UNIQUE` (`degree`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -161,7 +160,7 @@ CREATE TABLE `m_degree` (
 
 LOCK TABLES `m_degree` WRITE;
 /*!40000 ALTER TABLE `m_degree` DISABLE KEYS */;
-INSERT INTO `m_degree` VALUES (1,'B.Tech','Bacheleor Of Technology');
+INSERT INTO `m_degree` VALUES (1,'B.Tech','Bacheleor Of Technology'),(2,'B.E.','Bachelor of E');
 /*!40000 ALTER TABLE `m_degree` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,7 +179,7 @@ CREATE TABLE `m_institution` (
   `location` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`institution_id`),
   UNIQUE KEY `institution_name_UNIQUE` (`institution_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,6 +188,7 @@ CREATE TABLE `m_institution` (
 
 LOCK TABLES `m_institution` WRITE;
 /*!40000 ALTER TABLE `m_institution` DISABLE KEYS */;
+INSERT INTO `m_institution` VALUES (1,'BIT MESRA','Ranchi','765443','JHARKHAND'),(2,'Harward','brussells','765445','brussells');
 /*!40000 ALTER TABLE `m_institution` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,7 +390,7 @@ CREATE TABLE `user_education_history` (
   CONSTRAINT `user_degree_fk` FOREIGN KEY (`degree_id`) REFERENCES `m_degree` (`degree_id`),
   CONSTRAINT `user_education_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `user_institution_fk` FOREIGN KEY (`institution_id`) REFERENCES `m_institution` (`institution_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,6 +399,7 @@ CREATE TABLE `user_education_history` (
 
 LOCK TABLES `user_education_history` WRITE;
 /*!40000 ALTER TABLE `user_education_history` DISABLE KEYS */;
+INSERT INTO `user_education_history` VALUES (1,1,1,1,'string','2022-12-04 00:54:08','2022-12-04 00:54:08','Y');
 /*!40000 ALTER TABLE `user_education_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -474,4 +475,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-03 22:55:38
+-- Dump completed on 2022-12-06 21:57:58
