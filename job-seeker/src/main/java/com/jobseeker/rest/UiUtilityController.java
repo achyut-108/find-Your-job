@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jobseeker.domain.master.CompanyMasterResponse;
 import com.jobseeker.domain.master.DegreeMasterResponse;
 import com.jobseeker.domain.master.InstitutionMasterResponse;
 import com.jobseeker.domain.master.JobTypeResponse;
@@ -36,5 +37,10 @@ public class UiUtilityController {
 	@GetMapping(value = "/ui/getJobTypes/get", produces = "application/json")
 	public JobTypeResponse getAllJobTypeDetails() {
 		return uiUtilityService.getAllJobTypeDetails();
+	}
+	
+	@GetMapping(value = "/ui/getAllCompany/get", produces = "application/json")
+	public CompanyMasterResponse getAllCompanyDetails() {
+		return uiUtilityService.getAllCompanyDetails();
 	}
 }

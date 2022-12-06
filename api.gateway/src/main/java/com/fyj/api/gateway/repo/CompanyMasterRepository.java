@@ -11,4 +11,5 @@ import com.fyj.api.gateway.entity.CompanyMasterEntity;
 public interface CompanyMasterRepository extends CrudRepository<CompanyMasterEntity, Integer>{
 	
 	public CompanyMasterEntity findByUserId(BigInteger userId);
+	public CompanyMasterEntity findByCompanyName(String companyName);
 }

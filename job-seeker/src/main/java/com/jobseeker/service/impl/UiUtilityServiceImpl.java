@@ -5,12 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobseeker.common.BusinessConstants;
+import com.jobseeker.domain.master.CompanyMasterResponse;
 import com.jobseeker.domain.master.DegreeMasterResponse;
 import com.jobseeker.domain.master.InstitutionMasterResponse;
 import com.jobseeker.domain.master.JobTypeResponse;
+import com.jobseeker.entity.CompanyMasterEntity;
 import com.jobseeker.entity.DegreeMasterEntity;
 import com.jobseeker.entity.InstitutionMasterEntity;
 import com.jobseeker.entity.JobTypeMasterEntity;
+import com.jobseeker.repo.CompanyMasterRepository;
 import com.jobseeker.repo.DegreeMasterRepository;
 import com.jobseeker.repo.InstitutionMasterRepository;
 import com.jobseeker.repo.JobTypeMasterRepository;
@@ -25,6 +29,8 @@ public class UiUtilityServiceImpl implements UiUtilityService {
 	private InstitutionMasterRepository institutionMasterRepository;
 	@Autowired
 	private JobTypeMasterRepository jobTypeMasterRepository;
+	@Autowired
+	private CompanyMasterRepository companyMasterRepository;
 
 	@Override
 	public DegreeMasterResponse getAllDegreeDetails() {
@@ -60,5 +66,16 @@ public class UiUtilityServiceImpl implements UiUtilityService {
 		jobTypeResponse.setMessage("Successfully fetched the jobType details");
 		jobTypeResponse.setSuccess(true);
 		return jobTypeResponse;
+	}
+	
+	@Override
+	public CompanyMasterResponse getAllCompanyDetails() {
+		CompanyMasterResponse companyMasterResponse = new CompanyMasterResponse();
+		
+		List<CompanyMasterEntity> companyMasterEntities = (List<CompanyMasterEntity>) this.companyMasterRepository.findAll();
+		companyMasterResponse.setCompanyDetails(companyMasterEntities);
+		companyMasterResponse.setMessage("Successfully fetched the institution details");
+		companyMasterResponse.setSuccess(BusinessConstants.TRUE);
+		return companyMasterResponse;
 	}
 }

@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobseeker.common.CommonServiceRequest;
-import com.jobseeker.common.CommonServiceResponse;
-import com.jobseeker.domain.jobapply.JobAppliedStatDetails;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;

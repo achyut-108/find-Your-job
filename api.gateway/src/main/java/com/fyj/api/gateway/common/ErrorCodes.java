@@ -17,7 +17,9 @@ public enum ErrorCodes {
   RECRUITER_DOES_NOT_EXIST("FYJ_ERROR_607","Recruiter does not exist"),
   JOB_DOES_NOT_EXIST("FYJ_ERROR_608","Job is invalid or it has no longer active"),
   ALREADY_APPLIED_TO_JOB("FYJ_ERROR_609","Already applied for this job"),
-  INVALID_INPUT_PARAMETER("FYJ_ERROR_614", "The input paramter is invalid");
+  INVALID_INPUT_PARAMETER("FYJ_ERROR_614", "The input paramter is invalid"),
+  COMPANY_ALREADY_EXIST("FYJ_ERROR_615", "Company already present"),
+  INSTITUTION_ALREADY_EXIST("FYJ_ERROR_616", "Institution already present");
 
   private final String code;
   private final String description;

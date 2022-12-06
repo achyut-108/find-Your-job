@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fyj.api.gateway.common.CommonServiceResponse;
-import com.fyj.api.gateway.domain.login.LoginRequest;
-import com.fyj.api.gateway.domain.login.LoginResponse;
+import com.fyj.api.gateway.domain.master.CompanyMasterAddRequest;
 import com.fyj.api.gateway.domain.master.DegreeMasterAddRequest;
 import com.fyj.api.gateway.domain.master.DegreeMasterResponse;
 import com.fyj.api.gateway.domain.master.InstitutionMasterAddRequest;
@@ -72,6 +71,18 @@ public class MasterDataController {
 	public CommonServiceResponse editInstitution(@Valid @RequestBody InstitutionMasterAddRequest institutionMasterAddRequest) {
 		log.info("request : {}", institutionMasterAddRequest.toString());
 		return masterDataService.editInstitution(institutionMasterAddRequest);
+	}
+	
+	@PostMapping(value = "/admin/addCompany/post", produces = "application/json")
+	public CommonServiceResponse addCompany(@Valid @RequestBody CompanyMasterAddRequest companyMasterAddRequest) {
+		log.info("request : {}", companyMasterAddRequest.toString());
+		return masterDataService.addCompany(companyMasterAddRequest);
+	}
+	
+	@PostMapping(value = "/admin/editCompany/post", produces = "application/json")
+	public CommonServiceResponse editCompany(@Valid @RequestBody CompanyMasterAddRequest companyMasterAddRequest) {
+		log.info("request : {}", companyMasterAddRequest.toString());
+		return masterDataService.editCompany(companyMasterAddRequest);
 	}
 	
 }

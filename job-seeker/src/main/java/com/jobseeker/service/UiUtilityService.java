@@ -1,5 +1,6 @@
 package com.jobseeker.service;
 
+import com.jobseeker.domain.master.CompanyMasterResponse;
 import com.jobseeker.domain.master.DegreeMasterResponse;
 import com.jobseeker.domain.master.InstitutionMasterResponse;
 import com.jobseeker.domain.master.JobTypeResponse;
@@ -11,4 +12,6 @@ public interface UiUtilityService {
 	public InstitutionMasterResponse getAllInstitutionDetails();
 	
 	public JobTypeResponse getAllJobTypeDetails();
+
+	public CompanyMasterResponse getAllCompanyDetails();
 }

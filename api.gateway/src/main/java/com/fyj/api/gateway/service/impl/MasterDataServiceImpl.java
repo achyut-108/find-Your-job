@@ -11,11 +11,14 @@ import com.fyj.api.gateway.common.BusinessConstants;
 import com.fyj.api.gateway.common.CommonServiceResponse;
 import com.fyj.api.gateway.common.ErrorCodes;
 import com.fyj.api.gateway.common.ValidationError;
+import com.fyj.api.gateway.domain.master.CompanyMasterAddRequest;
 import com.fyj.api.gateway.domain.master.DegreeMasterAddRequest;
 import com.fyj.api.gateway.domain.master.InstitutionMasterAddRequest;
+import com.fyj.api.gateway.entity.CompanyMasterEntity;
 import com.fyj.api.gateway.entity.DegreeMasterEntity;
 import com.fyj.api.gateway.entity.InstitutionMasterEntity;
 import com.fyj.api.gateway.entity.UserEntity;
+import com.fyj.api.gateway.repo.CompanyMasterRepository;
 import com.fyj.api.gateway.repo.DegreeMasterRepository;
 import com.fyj.api.gateway.repo.InstitutionMasterRepository;
 import com.fyj.api.gateway.repo.JobTypeMasterRepository;
@@ -33,6 +36,8 @@ public class MasterDataServiceImpl implements MasterDataService {
 	private JobTypeMasterRepository jobTypeMasterRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private CompanyMasterRepository companyMasterRepository;
 
 //	@Override
 //	public DegreeMasterResponse getAllDegreeDetails() {
@@ -118,19 +123,20 @@ public class MasterDataServiceImpl implements MasterDataService {
 		DegreeMasterEntity degreeMasterEntity = degreeMasterRepository.findByDegree(degreeMasterAddRequest.getDegree());
 
 		if (degreeMasterEntity != null) {
-			degreeMasterEntity.setDegreeDescription(degreeMasterAddRequest.getDegreeDescription()!=null 
-					? degreeMasterAddRequest.getDegreeDescription() : degreeMasterEntity.getDegreeDescription());
+			degreeMasterEntity.setDegreeDescription(degreeMasterAddRequest.getDegreeDescription() != null
+					? degreeMasterAddRequest.getDegreeDescription()
+					: degreeMasterEntity.getDegreeDescription());
 			degreeMasterRepository.save(degreeMasterEntity);
-		}else {
+		} else {
 			response.setSuccess(BusinessConstants.FALSE);
-			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), 
-					null, null, degreeMasterEntity));
+			response.addValidationError(
+					new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), null, null, degreeMasterEntity));
 			response.setMessage("Successfully edited the degree details");
 		}
 
 		return response;
 	}
-	
+
 	public CommonServiceResponse addInstitution(@Valid InstitutionMasterAddRequest institutionMasterAddRequest) {
 		CommonServiceResponse response = new CommonServiceResponse();
 
@@ -145,22 +151,29 @@ public class MasterDataServiceImpl implements MasterDataService {
 			return response;
 		}
 
-		response.setSuccess(BusinessConstants.TRUE);
-		response.setMessage("Successfully edited the degree details");
-		
-		InstitutionMasterEntity institutionMasterEntity = new InstitutionMasterEntity();
-		institutionMasterEntity.setAddress(institutionMasterAddRequest.getAddress());
-		institutionMasterEntity.setInstitutionName(institutionMasterAddRequest.getInstitutionName());
-		institutionMasterEntity.setLocation(institutionMasterAddRequest.getLocation());
-		institutionMasterEntity.setPinCode(institutionMasterAddRequest.getPinCode());
-		
-		institutionMasterRepository.save(institutionMasterEntity);
+		InstitutionMasterEntity institutionMasterEntity = institutionMasterRepository
+				.findByInstitutionName(institutionMasterAddRequest.getInstitutionName());
 
-		response.setSuccess(BusinessConstants.TRUE);
-		response.setMessage("Successfully added the instituttion details");
+		if (institutionMasterEntity == null) {
+
+			institutionMasterEntity = new InstitutionMasterEntity();
+			institutionMasterEntity.setAddress(institutionMasterAddRequest.getAddress());
+			institutionMasterEntity.setInstitutionName(institutionMasterAddRequest.getInstitutionName());
+			institutionMasterEntity.setLocation(institutionMasterAddRequest.getLocation());
+			institutionMasterEntity.setPinCode(institutionMasterAddRequest.getPinCode());
+
+			institutionMasterRepository.save(institutionMasterEntity);
+			response.setSuccess(BusinessConstants.TRUE);
+			response.setMessage("Successfully added the instituttion details");
+		} else {
+			response.setSuccess(BusinessConstants.FALSE);
+			response.addValidationError(new ValidationError(ErrorCodes.INSTITUTION_ALREADY_EXIST.getCode(),
+					ErrorCodes.INSTITUTION_ALREADY_EXIST.getDescription(), "institutionName",
+					institutionMasterAddRequest.getInstitutionName()));
+		}
 
 		return response;
-		
+
 	}
 
 	public CommonServiceResponse editInstitution(@Valid InstitutionMasterAddRequest institutionMasterAddRequest) {
@@ -180,24 +193,101 @@ public class MasterDataServiceImpl implements MasterDataService {
 		response.setSuccess(BusinessConstants.TRUE);
 		response.setMessage("Successfully edited the degree details");
 
-		InstitutionMasterEntity institutionMasterEntity = institutionMasterRepository.
-				findByInstitutionName(institutionMasterAddRequest.getInstitutionName());
+		InstitutionMasterEntity institutionMasterEntity = institutionMasterRepository
+				.findByInstitutionName(institutionMasterAddRequest.getInstitutionName());
 
 		if (institutionMasterEntity != null) {
-			institutionMasterEntity.setAddress(institutionMasterAddRequest.getAddress()!=null 
-					? institutionMasterAddRequest.getAddress() : institutionMasterEntity.getAddress());
-			institutionMasterEntity.setLocation(institutionMasterAddRequest.getLocation()!=null 
-					? institutionMasterAddRequest.getLocation() : institutionMasterEntity.getLocation());
-			institutionMasterEntity.setPinCode(institutionMasterAddRequest.getPinCode()!=null
-					? institutionMasterAddRequest.getPinCode() : institutionMasterEntity.getPinCode());
+			institutionMasterEntity.setAddress(
+					institutionMasterAddRequest.getAddress() != null ? institutionMasterAddRequest.getAddress()
+							: institutionMasterEntity.getAddress());
+			institutionMasterEntity.setLocation(
+					institutionMasterAddRequest.getLocation() != null ? institutionMasterAddRequest.getLocation()
+							: institutionMasterEntity.getLocation());
+			institutionMasterEntity.setPinCode(
+					institutionMasterAddRequest.getPinCode() != null ? institutionMasterAddRequest.getPinCode()
+							: institutionMasterEntity.getPinCode());
 			institutionMasterRepository.save(institutionMasterEntity);
-		}else {
+		} else {
 			response.setSuccess(BusinessConstants.FALSE);
-			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), 
-					null, null, institutionMasterEntity));
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), null, null,
+					institutionMasterEntity));
 			response.setMessage("Successfully edited the institution details");
 		}
 
 		return response;
 	}
+
+	public CommonServiceResponse addCompany(@Valid CompanyMasterAddRequest companyMasterAddRequest) {
+		CommonServiceResponse response = new CommonServiceResponse();
+
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !companyMasterAddRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", companyMasterAddRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		CompanyMasterEntity companyMasterEntity = companyMasterRepository
+				.findByCompanyName(companyMasterAddRequest.getCompanyName());
+
+		if (companyMasterEntity == null) {
+			companyMasterEntity = new CompanyMasterEntity();
+			companyMasterEntity.setCompanyName(companyMasterAddRequest.getCompanyName());
+
+			companyMasterEntity.setCompanyDescription(companyMasterAddRequest.getCompanyDescription() != null
+					? companyMasterAddRequest.getCompanyDescription()
+					: "");
+			companyMasterRepository.save(companyMasterEntity);
+		} else {
+			response.setSuccess(BusinessConstants.FALSE);
+			response.addValidationError(new ValidationError(ErrorCodes.COMPANY_ALREADY_EXIST.getCode(),
+					ErrorCodes.COMPANY_ALREADY_EXIST.getDescription(), "companyName",
+					companyMasterAddRequest.getCompanyName()));
+			response.setMessage("Successfully added the company details");
+		}
+
+		return response;
+	}
+
+	public CommonServiceResponse editCompany(CompanyMasterAddRequest companyMasterAddRequest) {
+		CommonServiceResponse response = new CommonServiceResponse();
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+				BusinessConstants.ACTIVE);
+
+		if (Objects.isNull(userEntity)
+				|| !companyMasterAddRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
+					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", companyMasterAddRequest.getLoginId()));
+			response.setSuccess(BusinessConstants.FALSE);
+			return response;
+		}
+
+		CompanyMasterEntity companyMasterEntity = companyMasterRepository
+				.findByCompanyName(companyMasterAddRequest.getCompanyName());
+
+		if (companyMasterEntity != null) {
+			companyMasterEntity.setCompanyName(
+					companyMasterAddRequest.getCompanyName() != null ? companyMasterAddRequest.getCompanyName()
+							: companyMasterEntity.getCompanyName());
+
+			companyMasterEntity.setCompanyDescription(companyMasterAddRequest.getCompanyDescription() != null
+					? companyMasterAddRequest.getCompanyDescription()
+					: companyMasterEntity.getCompanyDescription());
+
+			companyMasterRepository.save(companyMasterEntity);
+
+		} else {
+			response.setSuccess(BusinessConstants.FALSE);
+			response.addValidationError(new ValidationError(ErrorCodes.INVALID_INPUT_PARAMETER.getCode(), null, null,
+					companyMasterAddRequest));
+			response.setMessage("Successfully edited the company details");
+		}
+
+		return response;
+	}
+
 }

@@ -180,11 +180,10 @@ public class JobApplyServiceImpl implements JobApplyService {
 	public JobsAppliedStatisticsResponse getJobAppliedStatistics(@Valid CommonServiceRequest commonServiceRequest) {
 
 		JobsAppliedStatisticsResponse response = new JobsAppliedStatisticsResponse();
-		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
+		UserEntity userEntity = userRepository.findByLoginIdAndActive(commonServiceRequest.getLoginId(),
 				BusinessConstants.ACTIVE);
 
-		if (Objects.isNull(userEntity)
-				|| !commonServiceRequest.getLoginId().equalsIgnoreCase(BusinessConstants.ADMIN)) {
+		if (Objects.isNull(userEntity)) {
 			response.addValidationError(new ValidationError(ErrorCodes.INVALID_USER_ID.getCode(),
 					ErrorCodes.INVALID_USER_ID.getDescription(), "loginId", commonServiceRequest.getLoginId()));
 			response.setSuccess(BusinessConstants.FALSE);
@@ -196,7 +195,6 @@ public class JobApplyServiceImpl implements JobApplyService {
 		List<JobAppliedStatDetails> jobsAppliedStatDetails = new ArrayList<>();
 
 		long totalJobsApplied = 0;
-		BigInteger hundred = new BigInteger("100");
 		for (Object[] obj : jobAppliedStats) {
 			JobAppliedStatDetails jobAppliedStatDetails = new JobAppliedStatDetails();
 			jobAppliedStatDetails.setCountOfJobSeekers(
