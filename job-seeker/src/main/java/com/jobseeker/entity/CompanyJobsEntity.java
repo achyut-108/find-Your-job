@@ -33,6 +33,12 @@ public class CompanyJobsEntity {
 	@Column(name = "posted_by")
 	private BigInteger postedBy;
 	
+	public BigInteger getPostedBy() {
+		return postedBy;
+	}
+	public void setPostedBy(BigInteger postedBy) {
+		this.postedBy = postedBy;
+	}
 	public BigInteger getJobId() {
 		return jobId;
 	}

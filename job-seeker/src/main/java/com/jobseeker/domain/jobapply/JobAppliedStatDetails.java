@@ -15,14 +15,21 @@ public class JobAppliedStatDetails implements Serializable {
 	public static final long serialVersionUID = 1L;
 
 	private BigInteger jobId;
-	private Integer countOfJobSeekers;
+	private long countOfJobSeekers;
 	private Integer companyId;
 	private String jobTitle;
 	private String jobDescription;
 	private Integer jobTypeId;
-	private Integer jobPostedBy;
+	private BigInteger jobPostedBy;
 	private String jobType;
+	private long jobAppliedPercentage;
 	
+	public long getJobAppliedPercentage() {
+		return jobAppliedPercentage;
+	}
+	public void setJobAppliedPercentage(long jobAppliedPercentage) {
+		this.jobAppliedPercentage = jobAppliedPercentage;
+	}
 	public String getJobType() {
 		return jobType;
 	}
@@ -35,10 +42,10 @@ public class JobAppliedStatDetails implements Serializable {
 	public void setJobId(BigInteger jobId) {
 		this.jobId = jobId;
 	}
-	public Integer getCountOfJobSeekers() {
+	public long getCountOfJobSeekers() {
 		return countOfJobSeekers;
 	}
-	public void setCountOfJobSeekers(Integer countOfJobSeekers) {
+	public void setCountOfJobSeekers(long countOfJobSeekers) {
 		this.countOfJobSeekers = countOfJobSeekers;
 	}
 	public Integer getCompanyId() {
@@ -65,10 +72,10 @@ public class JobAppliedStatDetails implements Serializable {
 	public void setJobTypeId(Integer jobTypeId) {
 		this.jobTypeId = jobTypeId;
 	}
-	public Integer getJobPostedBy() {
+	public BigInteger getJobPostedBy() {
 		return jobPostedBy;
 	}
-	public void setJobPostedBy(Integer jobPostedBy) {
+	public void setJobPostedBy(BigInteger jobPostedBy) {
 		this.jobPostedBy = jobPostedBy;
 	}
 }

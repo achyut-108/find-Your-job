@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobseeker.common.CommonServiceRequest;
 import com.jobseeker.common.CommonServiceResponse;
+import com.jobseeker.domain.jobapply.JobAppliedStatDetails;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
+import com.jobseeker.domain.jobapply.JobsAppliedStatisticsResponse;
 import com.jobseeker.domain.resume.JobApplicationStatusRequest;
 import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.service.JobApplyService;
@@ -50,7 +52,7 @@ public class JobApplyController {
 	}
 	
 	@PostMapping(value = "/job/jobAppliedStatistics/get/", produces = "application/json")
-	public CommonServiceResponse getJobAppliedStatistics(@Valid @RequestBody CommonServiceRequest commonServiceRequest) {
+	public JobsAppliedStatisticsResponse getJobAppliedStatistics(@Valid @RequestBody CommonServiceRequest commonServiceRequest) {
 		log.info("request : {}", commonServiceRequest);
 		return jobApplyService.getJobAppliedStatistics(commonServiceRequest);
 	}

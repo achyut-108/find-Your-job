@@ -23,10 +23,10 @@ public interface JobApplicationHistoryRepo extends CrudRepository<JobApplication
 	public List<Object[]> jobsAppliedByAjobSeeker(BigInteger jobSeekerid);
 	
 	@Query(value = "select count(job_seeker_id),jah.job_id\r\n"
-			+ "FROM job_search.job_application_history jah\r\n"
+			+ "from job_application_history jah\r\n"
 			+ ", company_jobs cj where jah.job_id = cj.job_id \r\n"
 			+ "group by jah.job_id having count(job_seeker_id)>=1 order by \r\n"
-			+ "count(job_seeker_id) desc")
+			+ "count(job_seeker_id) desc", nativeQuery = true)
 	public List<Object[]> jobsAppliedStatistics();
 	
 	

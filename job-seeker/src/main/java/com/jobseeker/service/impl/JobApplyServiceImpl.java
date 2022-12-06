@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.jobseeker.common.BusinessConstants;
 import com.jobseeker.common.CommonServiceRequest;
-import com.jobseeker.common.CommonServiceResponse;
 import com.jobseeker.common.ErrorCodes;
 import com.jobseeker.common.ValidationError;
 import com.jobseeker.domain.jobapply.JobApplicationDetails;
@@ -22,6 +21,7 @@ import com.jobseeker.domain.jobapply.JobAppliedStatDetails;
 import com.jobseeker.domain.jobapply.JobApplyRequest;
 import com.jobseeker.domain.jobapply.JobApplyResponse;
 import com.jobseeker.domain.jobapply.JobsAppliedResponse;
+import com.jobseeker.domain.jobapply.JobsAppliedStatisticsResponse;
 import com.jobseeker.domain.resume.JobApplicationStatusRequest;
 import com.jobseeker.domain.resume.JobApplicationStatusResponse;
 import com.jobseeker.entity.CompanyJobsEntity;
@@ -177,9 +177,9 @@ public class JobApplyServiceImpl implements JobApplyService {
 	}
 
 	@Override
-	public CommonServiceResponse getJobAppliedStatistics(@Valid CommonServiceRequest commonServiceRequest) {
+	public JobsAppliedStatisticsResponse getJobAppliedStatistics(@Valid CommonServiceRequest commonServiceRequest) {
 
-		CommonServiceResponse response = new CommonServiceResponse();
+		JobsAppliedStatisticsResponse response = new JobsAppliedStatisticsResponse();
 		UserEntity userEntity = userRepository.findByLoginIdAndActive(BusinessConstants.ADMIN,
 				BusinessConstants.ACTIVE);
 
@@ -195,35 +195,43 @@ public class JobApplyServiceImpl implements JobApplyService {
 
 		List<JobAppliedStatDetails> jobsAppliedStatDetails = new ArrayList<>();
 
+		long totalJobsApplied = 0;
+		BigInteger hundred = new BigInteger("100");
 		for (Object[] obj : jobAppliedStats) {
 			JobAppliedStatDetails jobAppliedStatDetails = new JobAppliedStatDetails();
-			jobAppliedStatDetails.setCountOfJobSeekers(obj[0] == null ? null : (Integer) obj[0]);
+			jobAppliedStatDetails.setCountOfJobSeekers(
+					obj[0] == null ? null : Long.valueOf(obj[0].toString()));
+			totalJobsApplied = totalJobsApplied + jobAppliedStatDetails.getCountOfJobSeekers();
 			jobAppliedStatDetails
 					.setJobId(obj[1] == null ? null : BigInteger.valueOf((Long.valueOf(obj[1].toString()))));
 
-			Optional<CompanyJobsEntity> companyJobOpt = companyJobsRepository.findById(jobAppliedStatDetails.getJobId());
+			Optional<CompanyJobsEntity> companyJobOpt = companyJobsRepository
+					.findById(jobAppliedStatDetails.getJobId());
 
-			if(companyJobOpt.isPresent()) {
+			if (companyJobOpt.isPresent()) {
 				CompanyJobsEntity companyJobsEntity = companyJobOpt.get();
 				jobAppliedStatDetails.setCompanyId(companyJobsEntity.getCompanyId());
 				jobAppliedStatDetails.setJobTitle(companyJobsEntity.getJobTitle());
 				jobAppliedStatDetails.setJobDescription(companyJobsEntity.getJobDescription());
-				//jobAppliedStatDetails.setJobPostedBy(companyJobsEntity.getPo);
+				jobAppliedStatDetails.setJobPostedBy(companyJobsEntity.getPostedBy());
+				jobAppliedStatDetails.setJobTypeId(companyJobsEntity.getJobTypeId());
+				jobAppliedStatDetails
+						.setJobType(BusinessConstants.getJobTypeMap().get(companyJobsEntity.getJobTypeId()));
 			}
-			
-			
-//			
-//			jobAppliedStatDetails.setJobDescription(obj[3] == null ? null : (String) obj[3]);
-//			jobAppliedStatDetails.setJobTypeId(obj[4] == null ? null : (Integer) obj[4]);
-//			jobAppliedStatDetails
-//					.setJobType(BusinessConstants.getJobTypeMap().get(jobAppliedStatDetails.getJobTypeId()));
-//
-//			jobApplicationDetails
-//					.setJobApplicationId(obj[9] == null ? null : BigInteger.valueOf((Long.valueOf(obj[9].toString()))));
-//
-//			jobsApplied.add(jobApplicationDetails);
+
+			jobsAppliedStatDetails.add(jobAppliedStatDetails);
 
 		}
+
+		
+		for(JobAppliedStatDetails jobAppliedStatDetail : jobsAppliedStatDetails) {
+			long percentage = (100 / (totalJobsApplied)) * (jobAppliedStatDetail.getCountOfJobSeekers());
+			jobAppliedStatDetail.setJobAppliedPercentage(percentage);
+		}
+
+		response.setJobsApplied(jobsAppliedStatDetails);
+		response.setSuccess(BusinessConstants.TRUE);
+		response.setMessage("Successfully fetched the job stat details");
 		return response;
 	}
 
